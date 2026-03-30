@@ -115,21 +115,17 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
       try {
         let coreURL: string;
         let wasmURL: string;
-        let workerURL: string;
-
         if (baseURL.startsWith("/")) {
           coreURL = `${baseURL}/ffmpeg-core.js`;
           wasmURL = `${baseURL}/ffmpeg-core.wasm`;
-          workerURL = `${baseURL}/ffmpeg-core.worker.js`;
         } else {
-          [coreURL, wasmURL, workerURL] = await Promise.all([
+          [coreURL, wasmURL] = await Promise.all([
             toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
             toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-            toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, "text/javascript"),
           ]);
         }
 
-        await ffmpeg.load({ coreURL, wasmURL, workerURL });
+        await ffmpeg.load({ coreURL, wasmURL });
         loaded = true;
         break;
       } catch (err) {
