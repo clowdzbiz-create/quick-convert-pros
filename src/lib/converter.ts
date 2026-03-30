@@ -4,6 +4,8 @@
  * FFmpeg instance is cached as a singleton for speed
  */
 
+import ffmpegClassWorkerURL from "@ffmpeg/ffmpeg/dist/esm/worker.js?url";
+
 type ProgressCallback = (progress: number, label?: string) => void;
 
 // Image conversion using Canvas API (fast, native)
@@ -110,6 +112,18 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
       return URL.createObjectURL(blob);
     };
 
+    const withTimeout = async <T>(promise: Promise<T>, ms: number, label: string): Promise<T> => {
+      let timeoutId: number | null = null;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = window.setTimeout(() => reject(new Error(label)), ms);
+      });
+      try {
+        return await Promise.race([promise, timeoutPromise]);
+      } finally {
+        if (timeoutId !== null) window.clearTimeout(timeoutId);
+      }
+    };
+
     try {
       // Always create blob URLs — required for Web Worker creation
       const [coreURL, wasmURL] = await Promise.all([
@@ -118,7 +132,16 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
       ]);
 
       onProgress(20, "Initializing converter...");
-      await ffmpeg.load({ coreURL, wasmURL, workerURL: coreURL });
+      await withTimeout(
+        ffmpeg.load({
+          classWorkerURL: ffmpegClassWorkerURL,
+          coreURL,
+          wasmURL,
+          workerURL: coreURL,
+        }),
+        25000,
+        "Converter initialization timed out"
+      );
     } catch (localErr) {
       console.warn("Local FFmpeg load failed, trying CDN...", localErr);
       
@@ -128,7 +151,16 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
           makeBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript"),
           makeBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm"),
         ]);
-        await ffmpeg.load({ coreURL, wasmURL, workerURL: coreURL });
+        await withTimeout(
+          ffmpeg.load({
+            classWorkerURL: ffmpegClassWorkerURL,
+            coreURL,
+            wasmURL,
+            workerURL: coreURL,
+          }),
+          30000,
+          "Converter initialization timed out"
+        );
       } catch (cdnErr) {
         console.error("FFmpeg load failed (local + CDN):", localErr, cdnErr);
       // Reset so next attempt can retry
