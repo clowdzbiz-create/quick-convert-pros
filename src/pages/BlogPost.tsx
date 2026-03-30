@@ -26,8 +26,19 @@ const BlogPost = () => {
     description: post.metaDescription,
     datePublished: post.date,
     author: { "@type": "Organization", name: "Clowd Marketing" },
-    publisher: { "@type": "Organization", name: "Clowd Marketing" },
+    publisher: { "@type": "Organization", name: "Clowd Marketing", logo: { "@type": "ImageObject", url: "https://clowdconverter.com/favicon.png" } },
     url: `https://clowdconverter.com/blog/${post.slug}`,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://clowdconverter.com/blog/${post.slug}` },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://clowdconverter.com/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://clowdconverter.com/blog/${post.slug}` },
+    ],
   };
 
   return (
