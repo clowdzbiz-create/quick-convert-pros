@@ -17,13 +17,21 @@ const ACCEPT_MAP: Record<MediaType, string> = {
   image: "image/*",
 };
 
-const FileConverter = () => {
-  const [mediaType, setMediaType] = useState<MediaType>("video");
-  const [selectedFormat, setSelectedFormat] = useState<string>("MP4");
+interface FileConverterProps {
+  defaultMediaType?: MediaType;
+  defaultFormat?: string;
+}
+
+const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) => {
+  const [mediaType, setMediaType] = useState<MediaType>(defaultMediaType || "video");
+  const [selectedFormat, setSelectedFormat] = useState<string>(
+    defaultFormat || FORMAT_MAP[defaultMediaType || "video"][0]
+  );
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [converting, setConverting] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [progressLabel, setProgressLabel] = useState("");
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +47,7 @@ const FileConverter = () => {
     setResultUrl(null);
     setError(null);
     setProgress(0);
+    setProgressLabel("");
     setConverting(false);
   };
 
@@ -59,12 +68,22 @@ const FileConverter = () => {
     if (!file) return;
     setConverting(true);
     setError(null);
-    setProgress(10);
+    setProgress(5);
+    setProgressLabel("Preparing...");
 
     try {
-      const result = await convertFile(file, selectedFormat.toLowerCase(), mediaType, (p) => setProgress(p));
+      const result = await convertFile(
+        file,
+        selectedFormat.toLowerCase(),
+        mediaType,
+        (p, label) => {
+          setProgress(p);
+          if (label) setProgressLabel(label);
+        }
+      );
       setResultUrl(result);
       setProgress(100);
+      setProgressLabel("Complete!");
     } catch (err: any) {
       setError(err.message || "Conversion failed. Please try a different file.");
     } finally {
@@ -148,7 +167,9 @@ const FileConverter = () => {
           ) : (
             <div className="flex flex-col items-center gap-2">
               <Upload className="w-10 h-10 text-primary/60" />
-              <p className="font-semibold text-foreground">Drop your file here or click to browse</p>
+              <p className="font-semibold text-foreground">
+                Drop your file here or click to browse
+              </p>
               <p className="text-xs text-muted-foreground">Max file size: 500MB</p>
             </div>
           )}
@@ -167,13 +188,23 @@ const FileConverter = () => {
           ))}
         </div>
 
-        {/* Progress bar */}
-        {converting && (
-          <div className="mt-4 w-full bg-muted rounded-full h-2 overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
+        {/* Enhanced Progress bar */}
+        {(converting || progress === 100) && (
+          <div className="mt-5 space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground font-medium">{progressLabel}</span>
+              <span className="text-primary font-semibold">{Math.round(progress)}%</span>
+            </div>
+            <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all duration-500 ease-out relative"
+                style={{ width: `${progress}%` }}
+              >
+                {converting && progress < 100 && (
+                  <div className="absolute inset-0 bg-primary-foreground/20 animate-pulse rounded-full" />
+                )}
+              </div>
+            </div>
           </div>
         )}
 

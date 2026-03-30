@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import {
   Accordion,
   AccordionContent,
@@ -26,11 +27,32 @@ const faqs = [
     q: "What's the maximum file size I can convert?",
     a: "You can convert files up to 500MB in size. For larger files, consider splitting them or using desktop software.",
   },
+  {
+    q: "Does Clowd Converter work on mobile?",
+    a: "Yes! Clowd Converter works on any device with a modern browser — phones, tablets, and desktops. No app download needed.",
+  },
+  {
+    q: "Do I need to create an account?",
+    a: "No. Clowd Converter requires no sign-up, no email, and no personal information. Just visit the site and start converting.",
+  },
 ];
 
 const FAQSection = () => {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <section className="w-full max-w-3xl mx-auto px-4 py-8">
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+      </Helmet>
       <h2 className="text-2xl font-bold text-foreground text-center mb-6">
         Frequently Asked Questions
       </h2>

@@ -3,11 +3,11 @@
  * Uses Canvas API for images, FFmpeg.wasm for audio/video
  */
 
-type ProgressCallback = (progress: number) => void;
+type ProgressCallback = (progress: number, label?: string) => void;
 
 // Image conversion using Canvas API
 async function convertImage(file: File, targetFormat: string, onProgress: ProgressCallback): Promise<string> {
-  onProgress(20);
+  onProgress(20, "Reading image...");
   
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement("canvas");
@@ -16,7 +16,7 @@ async function convertImage(file: File, targetFormat: string, onProgress: Progre
   const ctx = canvas.getContext("2d")!;
   ctx.drawImage(bitmap, 0, 0);
   
-  onProgress(60);
+  onProgress(60, "Converting format...");
 
   const mimeMap: Record<string, string> = {
     jpg: "image/jpeg",
@@ -36,7 +36,7 @@ async function convertImage(file: File, targetFormat: string, onProgress: Progre
           reject(new Error("Failed to convert image"));
           return;
         }
-        onProgress(90);
+        onProgress(95, "Finalizing...");
         resolve(URL.createObjectURL(blob));
       },
       mime,
@@ -47,14 +47,14 @@ async function convertImage(file: File, targetFormat: string, onProgress: Progre
 
 // Audio/Video conversion using FFmpeg.wasm
 async function convertMedia(file: File, targetFormat: string, onProgress: ProgressCallback): Promise<string> {
-  onProgress(15);
+  onProgress(10, "Loading converter engine...");
   
   const { FFmpeg } = await import("@ffmpeg/ffmpeg");
   const { fetchFile } = await import("@ffmpeg/util");
   
   const ffmpeg = new FFmpeg();
   
-  onProgress(25);
+  onProgress(20, "Initializing FFmpeg...");
 
   if (!ffmpeg.loaded) {
     await ffmpeg.load({
@@ -63,17 +63,17 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
     });
   }
 
-  onProgress(40);
+  onProgress(40, "Reading file...");
 
   const inputExt = file.name.split(".").pop() || "mp4";
   const inputName = `input.${inputExt}`;
   const outputName = `output.${targetFormat}`;
 
   await ffmpeg.writeFile(inputName, await fetchFile(file));
-  onProgress(55);
+  onProgress(55, "Converting...");
 
   await ffmpeg.exec(["-i", inputName, outputName]);
-  onProgress(85);
+  onProgress(85, "Packaging output...");
 
   const data = await ffmpeg.readFile(outputName);
   const uint8 = new Uint8Array(data as Uint8Array);
@@ -81,7 +81,7 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
   const mimeType = audioFormats.includes(targetFormat) ? `audio/${targetFormat}` : `video/${targetFormat}`;
   const blob = new Blob([uint8], { type: mimeType });
   
-  onProgress(95);
+  onProgress(95, "Finalizing...");
   return URL.createObjectURL(blob);
 }
 
