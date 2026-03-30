@@ -79,6 +79,20 @@ const BlogPost = () => {
             <MarkdownRenderer content={post.content} />
           </div>
 
+          {/* CTA section for SEO internal linking */}
+          <div className="mt-8 p-6 bg-primary/5 rounded-xl border border-primary/10">
+            <h3 className="font-bold text-foreground mb-2">Ready to convert your files?</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Try Clowd Converter — it's free, fast, and works right in your browser. No uploads, no sign-up required.
+            </p>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-sm text-primary font-semibold hover:underline"
+            >
+              Start Converting Now →
+            </Link>
+          </div>
+
           <AdSlot height="90px" label="Ad Space — Article Bottom" />
         </article>
       </main>

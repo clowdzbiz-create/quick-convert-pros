@@ -20,7 +20,7 @@ Clowd Converter is a browser-based file conversion tool by Clowd Marketing. File
 ## Supported Formats
 
 ### Video
-MP4, WebM, MOV, AVI, MKV, FLV — convert between any video format, or extract audio
+MP4, WebM, MOV, AVI, MKV, FLV, GIF — convert between any video format, extract audio, or create GIFs
 
 ### Audio
 MP3, WAV, OGG, AAC, FLAC, M4A — convert, compress, or decompress audio
@@ -30,38 +30,65 @@ JPG, PNG, WebP, GIF, BMP — convert, optimize, or change format instantly
 
 ## All Conversion Pages
 
-- [MP4 to MP3](https://clowdconverter.com/convert-mp4-to-mp3)
-- [Video to MP3](https://clowdconverter.com/convert-video-to-mp3)
-- [WebM to MP4](https://clowdconverter.com/convert-webm-to-mp4)
-- [MOV to MP4](https://clowdconverter.com/convert-mov-to-mp4)
-- [MP4 to WebM](https://clowdconverter.com/convert-mp4-to-webm)
-- [MP4 to MOV](https://clowdconverter.com/convert-mp4-to-mov)
-- [AVI to MP4](https://clowdconverter.com/convert-avi-to-mp4)
-- [MKV to MP4](https://clowdconverter.com/convert-mkv-to-mp4)
-- [PNG to JPG](https://clowdconverter.com/convert-png-to-jpg)
-- [JPG to PNG](https://clowdconverter.com/convert-jpg-to-png)
-- [PNG to WebP](https://clowdconverter.com/convert-png-to-webp)
-- [JPG to WebP](https://clowdconverter.com/convert-jpg-to-webp)
-- [WebP to JPG](https://clowdconverter.com/convert-webp-to-jpg)
-- [WebP to PNG](https://clowdconverter.com/convert-webp-to-png)
-- [GIF to PNG](https://clowdconverter.com/convert-gif-to-png)
-- [BMP to JPG](https://clowdconverter.com/convert-bmp-to-jpg)
-- [MP3 to WAV](https://clowdconverter.com/convert-mp3-to-wav)
-- [WAV to MP3](https://clowdconverter.com/convert-wav-to-mp3)
-- [FLAC to MP3](https://clowdconverter.com/convert-flac-to-mp3)
-- [OGG to MP3](https://clowdconverter.com/convert-ogg-to-mp3)
-- [AAC to MP3](https://clowdconverter.com/convert-aac-to-mp3)
+### Video Conversions
+- [MP4 to MP3](https://clowdconverter.com/convert-mp4-to-mp3) — Extract audio from MP4 video
+- [Video to MP3](https://clowdconverter.com/convert-video-to-mp3) — Extract MP3 from any video
+- [WebM to MP4](https://clowdconverter.com/convert-webm-to-mp4) — Convert WebM to universal MP4
+- [MOV to MP4](https://clowdconverter.com/convert-mov-to-mp4) — Convert iPhone/Mac videos to MP4
+- [MP4 to WebM](https://clowdconverter.com/convert-mp4-to-webm) — Convert MP4 for web use
+- [MP4 to MOV](https://clowdconverter.com/convert-mp4-to-mov) — Convert to Apple QuickTime
+- [AVI to MP4](https://clowdconverter.com/convert-avi-to-mp4) — Convert legacy AVI to modern MP4
+- [MKV to MP4](https://clowdconverter.com/convert-mkv-to-mp4) — Convert Matroska to MP4
+- [MP4 to GIF](https://clowdconverter.com/convert-mp4-to-gif) — Create animated GIF from video
+- [MP4 to AVI](https://clowdconverter.com/convert-mp4-to-avi) — Convert to AVI for legacy players
+- [FLV to MP4](https://clowdconverter.com/convert-flv-to-mp4) — Convert Flash Video to MP4
+- [WebM to MP3](https://clowdconverter.com/convert-webm-to-mp3) — Extract audio from WebM
+- [MOV to MP3](https://clowdconverter.com/convert-mov-to-mp3) — Extract audio from MOV
+- [MP4 to MKV](https://clowdconverter.com/convert-mp4-to-mkv) — Convert to Matroska container
+
+### Audio Conversions
+- [MP3 to WAV](https://clowdconverter.com/convert-mp3-to-wav) — Convert MP3 to uncompressed WAV
+- [WAV to MP3](https://clowdconverter.com/convert-wav-to-mp3) — Compress WAV to MP3
+- [FLAC to MP3](https://clowdconverter.com/convert-flac-to-mp3) — Convert lossless FLAC to MP3
+- [OGG to MP3](https://clowdconverter.com/convert-ogg-to-mp3) — Convert OGG Vorbis to MP3
+- [AAC to MP3](https://clowdconverter.com/convert-aac-to-mp3) — Convert AAC to universal MP3
+- [M4A to MP3](https://clowdconverter.com/convert-m4a-to-mp3) — Convert Apple audio to MP3
+- [MP3 to OGG](https://clowdconverter.com/convert-mp3-to-ogg) — Convert to open-source OGG
+- [MP3 to AAC](https://clowdconverter.com/convert-mp3-to-aac) — Convert to AAC for Apple/streaming
+- [FLAC to WAV](https://clowdconverter.com/convert-flac-to-wav) — Convert lossless FLAC to WAV
+- [WAV to OGG](https://clowdconverter.com/convert-wav-to-ogg) — Compress WAV to OGG
+
+### Image Conversions
+- [PNG to JPG](https://clowdconverter.com/convert-png-to-jpg) — Reduce PNG file sizes
+- [JPG to PNG](https://clowdconverter.com/convert-jpg-to-png) — Add transparency support
+- [PNG to WebP](https://clowdconverter.com/convert-png-to-webp) — Optimize for web
+- [JPG to WebP](https://clowdconverter.com/convert-jpg-to-webp) — Modern web optimization
+- [WebP to JPG](https://clowdconverter.com/convert-webp-to-jpg) — Convert WebP for compatibility
+- [WebP to PNG](https://clowdconverter.com/convert-webp-to-png) — Convert WebP with transparency
+- [GIF to PNG](https://clowdconverter.com/convert-gif-to-png) — Better quality from GIF
+- [BMP to JPG](https://clowdconverter.com/convert-bmp-to-jpg) — Compress BMP dramatically
+- [WebP to GIF](https://clowdconverter.com/convert-webp-to-gif) — Convert for universal compatibility
+- [PNG to BMP](https://clowdconverter.com/convert-png-to-bmp) — For legacy software
+- [GIF to JPG](https://clowdconverter.com/convert-gif-to-jpg) — Convert GIF to photo format
+- [JPG to GIF](https://clowdconverter.com/convert-jpg-to-gif) — Convert to GIF format
+- [JPG to BMP](https://clowdconverter.com/convert-jpg-to-bmp) — For legacy applications
+- [GIF to WebP](https://clowdconverter.com/convert-gif-to-webp) — Smaller, better quality
+- [BMP to PNG](https://clowdconverter.com/convert-bmp-to-png) — Lossless compression
+- [BMP to WebP](https://clowdconverter.com/convert-bmp-to-webp) — Maximum compression
+- [WebP to BMP](https://clowdconverter.com/convert-webp-to-bmp) — For legacy systems
 
 ## Use Cases
 
-- **Content creators**: Convert video/audio for different platforms
-- **Web developers**: Optimize images to WebP for faster sites
-- **Students**: Extract audio from lecture recordings
-- **Musicians**: Convert between lossless and compressed formats
-- **Social media managers**: Prepare media for Instagram, TikTok, YouTube
-- **General users**: Share iPhone MOV videos as MP4, convert HEIC photos
-- **Podcasters**: Convert WAV recordings to MP3 for distribution
+- **Content creators**: Convert video/audio for different platforms (YouTube, TikTok, Instagram)
+- **Web developers**: Optimize images to WebP for faster sites, reduce page load times
+- **Students**: Extract audio from lecture recordings, convert presentation media
+- **Musicians**: Convert between lossless (FLAC, WAV) and compressed formats (MP3, AAC)
+- **Social media managers**: Prepare media for Instagram, TikTok, YouTube, Twitter
+- **General users**: Share iPhone MOV videos as MP4, convert photos between formats
+- **Podcasters**: Convert WAV recordings to MP3 for distribution on Spotify, Apple Podcasts
 - **Gamers**: Convert OGG game audio to MP3 for playlists
+- **Designers**: Convert between PNG, JPG, WebP for different design workflows
+- **Email marketers**: Optimize image sizes for email campaigns
 
 ## Blog & Guides
 

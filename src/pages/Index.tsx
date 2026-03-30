@@ -18,13 +18,14 @@ const Index = () => {
     description: "Convert videos, audio, and images instantly for free. Browser-based, no upload needed. Fast, private, and secure.",
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Any",
+    browserRequirements: "Requires JavaScript and a modern browser",
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
     },
     featureList: [
-      "Video conversion (MP4, WebM, MOV, AVI, MKV, FLV)",
+      "Video conversion (MP4, WebM, MOV, AVI, MKV, FLV, GIF)",
       "Audio conversion (MP3, WAV, OGG, AAC, FLAC, M4A)",
       "Image conversion (JPG, PNG, WebP, GIF, BMP)",
       "AI-powered format recommendations",
@@ -32,11 +33,6 @@ const Index = () => {
       "No file uploads to servers",
       "Free with no sign-up required",
     ],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "12400",
-    },
   };
 
   const howToJsonLd = {

@@ -126,10 +126,10 @@ const ConversionLanding = () => {
 
         {/* Related conversions */}
         <section className="max-w-3xl mx-auto px-4 py-8">
-          <h3 className="text-lg font-bold text-foreground mb-4">Other Conversions</h3>
+          <h2 className="text-lg font-bold text-foreground mb-4">Other Conversions You Might Need</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {CONVERSION_ROUTES.filter((r) => r.slug !== route.slug)
-              .slice(0, 6)
+              .slice(0, 10)
               .map((r) => (
                 <Link
                   key={r.slug}
@@ -141,6 +141,21 @@ const ConversionLanding = () => {
                 </Link>
               ))}
           </div>
+        </section>
+
+        {/* Blog link for SEO juice */}
+        <section className="max-w-3xl mx-auto px-4 pb-8">
+          <p className="text-sm text-muted-foreground">
+            Learn more about file formats in our{" "}
+            <Link to="/blog" className="text-primary hover:underline font-medium">
+              blog and guides
+            </Link>
+            . Try our{" "}
+            <Link to="/" className="text-primary hover:underline font-medium">
+              free file converter
+            </Link>{" "}
+            for all your conversion needs.
+          </p>
         </section>
       </main>
       <Footer />
