@@ -281,9 +281,9 @@ function buildFFmpegArgs(input: string, output: string, targetFmt: string, input
   // Video-to-video: prefer compatibility over aggressive encoder flags
   if (videoExts.includes(inputExt) && videoExts.includes(targetFmt)) {
     if (targetFmt === "webm") {
-      return ["-i", input, "-c:v", "libvpx", "-crf", "32", "-b:v", "0", "-c:a", "libvorbis", output];
+      return ["-i", input, "-c:v", "libvpx", "-crf", "32", "-b:v", "0", "-deadline", "realtime", "-cpu-used", "8", "-c:a", "libvorbis", "-threads", "1", output];
     }
-    return ["-i", input, output];
+    return ["-i", input, "-threads", "1", output];
   }
 
   // Video to GIF
