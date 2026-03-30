@@ -150,14 +150,19 @@ const AdminPanel = () => {
     return data.publicUrl;
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    // Validate password server-side
+    const { data, error } = await supabase.functions.invoke("admin-data", {
+      body: { password },
+    });
+    if (error || !data || data.error) {
+      setAuthError("Incorrect password");
+    } else {
       sessionStorage.setItem("admin_auth", "true");
+      sessionStorage.setItem("admin_pwd", password);
       setAuthenticated(true);
       setAuthError("");
-    } else {
-      setAuthError("Incorrect password");
     }
   };
 
