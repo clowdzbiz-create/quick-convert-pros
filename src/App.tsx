@@ -17,6 +17,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
 const Analytics = lazy(() => import("./pages/Analytics.tsx"));
+const Gallery = lazy(() => import("./pages/Gallery.tsx"));
 
 const queryClient = new QueryClient();
 
