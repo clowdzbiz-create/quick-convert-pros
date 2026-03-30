@@ -364,7 +364,7 @@ const AdminPanel = () => {
                         />
                       ) : (
                         <img
-                          src={getPublicUrl(photo.file_path)}
+                          src={getPublicUrl(photo)}
                           alt={photo.ai_description || photo.file_name}
                           className="w-full h-full object-cover"
                           loading="lazy"
