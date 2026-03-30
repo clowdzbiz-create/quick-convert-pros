@@ -37,10 +37,10 @@ const SEOContentSection = () => {
         <h3 className="text-foreground text-lg font-semibold mt-6 mb-2">Image Conversion</h3>
         <p>
           Convert images instantly:{" "}
-          <Link to="/convert-png-to-jpg" className="text-primary underline">PNG to JPG</Link>,{" "}
-          <Link to="/convert-jpg-to-webp" className="text-primary underline">JPG to WebP</Link>,{" "}
-          <Link to="/convert-webp-to-jpg" className="text-primary underline">WebP to JPG</Link>,{" "}
-          <Link to="/convert-gif-to-png" className="text-primary underline">GIF to PNG</Link>, and more.
+          <Link to="/convert-png-to-jpg" className="text-primary underline hover:text-primary/80">PNG to JPG</Link>,{" "}
+          <Link to="/convert-jpg-to-webp" className="text-primary underline hover:text-primary/80">JPG to WebP</Link>,{" "}
+          <Link to="/convert-webp-to-jpg" className="text-primary underline hover:text-primary/80">WebP to JPG</Link>,{" "}
+          <Link to="/convert-gif-to-png" className="text-primary underline hover:text-primary/80">GIF to PNG</Link>, and more.
           Optimize images for websites, social media, or reduce file sizes without losing quality.
         </p>
 
