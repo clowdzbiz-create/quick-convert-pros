@@ -85,6 +85,14 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
       setResultUrl(result);
       setProgress(100);
       setProgressLabel("Complete!");
+
+      // Track conversion event (fire-and-forget)
+      const sourceExt = file.name.split(".").pop()?.toUpperCase() || "UNKNOWN";
+      supabase.from("conversions").insert({
+        source_format: sourceExt,
+        target_format: selectedFormat.toUpperCase(),
+        file_size_bytes: file.size,
+      }).then(() => {});
     } catch (err: any) {
       setError(err.message || "Conversion failed. Please try a different file.");
     } finally {
