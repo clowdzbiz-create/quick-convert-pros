@@ -97,8 +97,8 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.4s ease-out",
         "progress-fill": "progress-fill 0.6s ease-out forwards",
-      },
-          from: {
+    },
+  },
             height: "0",
           },
           to: {
