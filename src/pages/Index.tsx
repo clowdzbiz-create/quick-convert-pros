@@ -1,14 +1,16 @@
 import { Helmet } from "react-helmet-async";
+import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import FileConverter from "@/components/FileConverter";
-import FormatAdvisor from "@/components/FormatAdvisor";
-import AdSlot from "@/components/AdSlot";
-import FeaturesSection from "@/components/FeaturesSection";
-import FAQSection from "@/components/FAQSection";
-import PopularConversions from "@/components/PopularConversions";
-import SEOContentSection from "@/components/SEOContentSection";
 import Footer from "@/components/Footer";
+
+const FormatAdvisor = lazy(() => import("@/components/FormatAdvisor"));
+const AdSlot = lazy(() => import("@/components/AdSlot"));
+const FeaturesSection = lazy(() => import("@/components/FeaturesSection"));
+const FAQSection = lazy(() => import("@/components/FAQSection"));
+const PopularConversions = lazy(() => import("@/components/PopularConversions"));
+const SEOContentSection = lazy(() => import("@/components/SEOContentSection"));
 
 const Index = () => {
   const jsonLd = {
