@@ -4,8 +4,6 @@
  * FFmpeg instance is cached as a singleton for speed
  */
 
-import ffmpegClassWorkerURL from "@ffmpeg/ffmpeg/dist/esm/worker.js?url";
-
 type ProgressCallback = (progress: number, label?: string) => void;
 
 // Image conversion using Canvas API (fast, native)
@@ -134,7 +132,6 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
       onProgress(20, "Initializing converter...");
       await withTimeout(
         ffmpeg.load({
-          classWorkerURL: ffmpegClassWorkerURL,
           coreURL,
           wasmURL,
           workerURL: coreURL,
@@ -153,7 +150,6 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
         ]);
         await withTimeout(
           ffmpeg.load({
-            classWorkerURL: ffmpegClassWorkerURL,
             coreURL,
             wasmURL,
             workerURL: coreURL,
