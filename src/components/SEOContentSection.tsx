@@ -50,7 +50,7 @@ const SEOContentSection = () => {
         </p>
         <p>
           This approach is faster than server-based converters, completely private, and works even offline once the page has loaded. Read more in our{" "}
-          <Link to="/blog" className="text-primary underline">conversion guides and tutorials</Link>.
+          <Link to="/blog" className="text-primary underline hover:text-primary/80">conversion guides and tutorials</Link>.
         </p>
       </div>
     </section>
