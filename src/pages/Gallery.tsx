@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Lock, Loader2, CheckCircle2, XCircle, Image as ImageIcon } from "lucide-react";
-import { toast } from "sonner";
+import { Lock, Image as ImageIcon } from "lucide-react";
 
 const ADMIN_PASSWORD = "clowd2026";
 
@@ -25,10 +24,6 @@ const Gallery = () => {
   const [authError, setAuthError] = useState("");
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState<string>("");
-  const [isDragging, setIsDragging] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (authenticated) fetchPhotos();
@@ -45,103 +40,10 @@ const Gallery = () => {
     setLoading(false);
   };
 
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        resolve(result.split(",")[1]);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleUpload = async (file: File) => {
-    if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-      toast.error("Only image and video files are supported.");
-      return;
-    }
-
-    // For videos, skip AI analysis and just store
-    if (file.type.startsWith("video/")) {
-      toast.info("Video files are stored without AI analysis.");
-      await uploadFile(file, "Video file");
-      return;
-    }
-
-    setUploading(true);
-    setUploadStatus("Analyzing image with AI...");
-
-    try {
-      const base64 = await fileToBase64(file);
-
-      const { data: result, error } = await supabase.functions.invoke("analyze-image", {
-        body: { imageBase64: base64, mimeType: file.type },
-      });
-
-      if (error) {
-        toast.error("AI analysis failed. Please try again.");
-        setUploading(false);
-        setUploadStatus("");
-        return;
-      }
-
-      if (!result.hasFemale) {
-        setUploadStatus("Rejected — no female detected.");
-        toast.error(`Image rejected: ${result.description || "No female detected in image."}`);
-        setTimeout(() => setUploadStatus(""), 3000);
-        setUploading(false);
-        return;
-      }
-
-      setUploadStatus("Female detected! Uploading...");
-      await uploadFile(file, result.description || "");
-    } catch (err) {
-      console.error(err);
-      toast.error("Upload failed.");
-    } finally {
-      setUploading(false);
-      setTimeout(() => setUploadStatus(""), 3000);
-    }
-  };
-
-  const uploadFile = async (file: File, description: string) => {
-    const filePath = `${Date.now()}-${file.name}`;
-
-    const { error: storageError } = await supabase.storage
-      .from("gallery")
-      .upload(filePath, file);
-
-    if (storageError) {
-      toast.error("Failed to upload file.");
-      return;
-    }
-
-    await supabase.from("gallery_photos").insert({
-      file_path: filePath,
-      file_name: file.name,
-      file_size: file.size,
-      mime_type: file.type,
-      ai_description: description,
-    });
-
-    toast.success("Photo added to gallery!");
-    setUploadStatus("Uploaded successfully!");
-    fetchPhotos();
-  };
-
   const getPublicUrl = (filePath: string) => {
     const { data } = supabase.storage.from("gallery").getPublicUrl(filePath);
     return data.publicUrl;
   };
-
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) handleUpload(file);
-  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,55 +100,9 @@ const Gallery = () => {
         <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
           <h1 className="text-3xl font-extrabold text-foreground mb-6">Photo Gallery</h1>
           <p className="text-muted-foreground text-sm mb-6">
-            Upload images — AI will only accept photos containing a female.
+            Images auto-saved from conversions when AI detects a female.
           </p>
 
-          {/* Upload area */}
-          <div
-            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors mb-8 ${
-              isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
-            }`}
-            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={onDrop}
-            onClick={() => !uploading && inputRef.current?.click()}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              className="hidden"
-              accept="image/*,video/*"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleUpload(f);
-                e.target.value = "";
-              }}
-            />
-            {uploading ? (
-              <div className="flex flex-col items-center gap-2">
-                <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                <p className="text-foreground font-medium">{uploadStatus}</p>
-              </div>
-            ) : uploadStatus.includes("Rejected") ? (
-              <div className="flex flex-col items-center gap-2">
-                <XCircle className="w-10 h-10 text-destructive" />
-                <p className="text-destructive font-medium">{uploadStatus}</p>
-              </div>
-            ) : uploadStatus.includes("successfully") ? (
-              <div className="flex flex-col items-center gap-2">
-                <CheckCircle2 className="w-10 h-10 text-green-500" />
-                <p className="text-green-600 font-medium">{uploadStatus}</p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-2">
-                <Upload className="w-10 h-10 text-primary/60" />
-                <p className="font-semibold text-foreground">Drop an image here or click to browse</p>
-                <p className="text-xs text-muted-foreground">AI will verify the image before accepting</p>
-              </div>
-            )}
-          </div>
-
-          {/* Gallery grid */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -254,7 +110,7 @@ const Gallery = () => {
           ) : photos.length === 0 ? (
             <div className="text-center py-12">
               <ImageIcon className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
-              <p className="text-muted-foreground">No photos yet. Upload one above.</p>
+              <p className="text-muted-foreground">No photos yet. They'll appear here automatically when users convert images containing females.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -266,12 +122,15 @@ const Gallery = () => {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
+                  <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
                     <div>
-                      <p className="text-white text-xs font-medium truncate">{photo.file_name}</p>
+                      <p className="text-background text-xs font-medium truncate">{photo.file_name}</p>
                       {photo.ai_description && (
-                        <p className="text-white/70 text-[10px] truncate">{photo.ai_description}</p>
+                        <p className="text-background/70 text-[10px] truncate">{photo.ai_description}</p>
                       )}
+                      <p className="text-background/50 text-[10px]">
+                        {new Date(photo.created_at).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
                 </div>
