@@ -60,14 +60,19 @@
 
   <body>
     <div id="root">
-      <!-- Inline skeleton for faster FCP -->
+      <!-- Inline skeleton for faster FCP/LCP -->
       <div style="min-height:100vh;background:#f0f6ff;font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center">
         <header style="width:100%;max-width:64rem;padding:1rem;display:flex;justify-content:space-between;align-items:center">
           <div style="font-size:1.25rem;font-weight:700;color:#1e293b">Clowd<br><span style="font-size:0.75rem;font-weight:400;color:#2563eb">Converter</span></div>
         </header>
-        <div style="text-align:center;padding:3rem 1rem 1rem">
-          <h1 style="font-size:1.75rem;font-weight:800;color:#1e293b;margin:0">Free Online File Converter</h1>
-          <p style="color:#65758b;margin-top:0.75rem;font-size:1rem">Convert videos, audio, and images instantly — right in your browser.</p>
+        <div style="text-align:center;padding:3rem 1rem 1rem;max-width:40rem">
+          <h1 style="font-size:clamp(1.75rem,5vw,3rem);font-weight:800;color:#1e293b;margin:0;line-height:1.15">Free Online File Converter</h1>
+          <p style="color:#65758b;margin-top:0.75rem;font-size:1.125rem;line-height:1.6">Convert videos, audio, and images instantly — right in your browser. No uploads, no sign-up, 100% free.</p>
+          <p style="color:#94a3b8;margin-top:0.5rem;font-size:0.875rem">Supports MP4, MP3, WAV, PNG, JPG, WebP, GIF, and 15+ more formats.</p>
+          <!-- File converter placeholder for LCP sizing -->
+          <div style="margin-top:2rem;border:2px dashed #cbd5e1;border-radius:1rem;padding:3rem 1rem;background:#fff">
+            <p style="color:#94a3b8;font-size:1rem">Loading converter...</p>
+          </div>
         </div>
       </div>
     </div>
