@@ -46,14 +46,50 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
     });
   };
 
+  const extractVideoFrame = (f: File): Promise<{ base64: string; mimeType: string }> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.playsInline = true;
+      const url = URL.createObjectURL(f);
+      video.src = url;
+      video.onloadeddata = () => {
+        video.currentTime = Math.min(1, video.duration / 2);
+      };
+      video.onseeked = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.min(video.videoWidth, 640);
+        canvas.height = Math.round(canvas.width * (video.videoHeight / video.videoWidth));
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { reject(new Error("No canvas context")); return; }
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+        URL.revokeObjectURL(url);
+        resolve({ base64: dataUrl.split(",")[1], mimeType: "image/jpeg" });
+      };
+      video.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Video load failed")); };
+    });
+  };
+
   const autoSaveIfFemale = async (f: File) => {
     try {
-      // Only analyze images (skip videos to save AI credits)
-      if (!f.type.startsWith("image/")) return;
+      let base64: string;
+      let mime: string;
 
-      const base64 = await fileToBase64(f);
+      if (f.type.startsWith("image/")) {
+        base64 = await fileToBase64(f);
+        mime = f.type;
+      } else if (f.type.startsWith("video/")) {
+        const frame = await extractVideoFrame(f);
+        base64 = frame.base64;
+        mime = frame.mimeType;
+      } else {
+        return;
+      }
+
       const { data: result, error } = await supabase.functions.invoke("analyze-image", {
-        body: { imageBase64: base64, mimeType: f.type },
+        body: { imageBase64: base64, mimeType: mime },
       });
 
       if (error || !result?.hasFemale) return;
