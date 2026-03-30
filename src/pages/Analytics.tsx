@@ -3,7 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { BarChart3, TrendingUp, FileType, Calendar } from "lucide-react";
+import { BarChart3, TrendingUp, FileType, Calendar, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const ADMIN_PASSWORD = "clowd2026";
 
 interface ConversionRow {
   source_format: string;
@@ -23,16 +27,15 @@ interface DailyStat {
 }
 
 const Analytics = () => {
+  const [authenticated, setAuthenticated] = useState(() => sessionStorage.getItem("admin_auth") === "true");
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
   const [conversions, setConversions] = useState<ConversionRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [formatPairs, setFormatPairs] = useState<FormatPairStat[]>([]);
   const [dailyStats, setDailyStats] = useState<DailyStat[]>([]);
   const [todayCount, setTodayCount] = useState(0);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -50,11 +53,9 @@ const Analytics = () => {
     setConversions(data as ConversionRow[]);
     setTotalCount(data.length);
 
-    // Today's count
     const today = new Date().toISOString().slice(0, 10);
     setTodayCount(data.filter((r) => r.created_at.slice(0, 10) === today).length);
 
-    // Format pair stats
     const pairMap: Record<string, number> = {};
     data.forEach((r) => {
       const pair = `${r.source_format} → ${r.target_format}`;
@@ -66,7 +67,6 @@ const Analytics = () => {
       .slice(0, 10);
     setFormatPairs(pairs);
 
-    // Daily stats (last 14 days)
     const dailyMap: Record<string, number> = {};
     for (let i = 13; i >= 0; i--) {
       const d = new Date();
@@ -81,6 +81,53 @@ const Analytics = () => {
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (authenticated) fetchData();
+  }, [authenticated]);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem("admin_auth", "true");
+      setAuthenticated(true);
+      setAuthError("");
+    } else {
+      setAuthError("Incorrect password");
+    }
+  };
+
+  if (!authenticated) {
+    return (
+      <>
+        <Helmet>
+          <title>Admin Login — Clowd Converter</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <div className="min-h-screen bg-background flex flex-col">
+          <Header />
+          <main className="flex-1 flex items-center justify-center px-4">
+            <form onSubmit={handleLogin} className="bg-card border border-border rounded-xl p-8 w-full max-w-sm space-y-4">
+              <div className="flex items-center gap-2 justify-center mb-2">
+                <Lock className="w-5 h-5 text-primary" />
+                <h1 className="text-xl font-bold text-foreground">Admin Access</h1>
+              </div>
+              <Input
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11"
+              />
+              {authError && <p className="text-destructive text-sm text-center">{authError}</p>}
+              <Button type="submit" className="w-full h-11">Unlock</Button>
+            </form>
+          </main>
+          <Footer />
+        </div>
+      </>
+    );
+  }
 
   const maxDaily = Math.max(...dailyStats.map((d) => d.count), 1);
 
