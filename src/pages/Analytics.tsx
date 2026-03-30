@@ -81,8 +81,8 @@ const Analytics = () => {
   }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (authenticated) fetchData();
+  }, [authenticated]);
 
   const fetchData = async () => {
     setLoading(true);
