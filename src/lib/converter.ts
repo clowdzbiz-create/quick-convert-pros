@@ -96,55 +96,49 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
     onProgress(10, "Loading converter (first time may take a moment)...");
     
     const { FFmpeg } = await import("@ffmpeg/ffmpeg");
-    const { toBlobURL } = await import("@ffmpeg/util");
     
     const ffmpeg = new FFmpeg();
     
     onProgress(15, "Downloading converter engine...");
 
-    const baseURLs = [
-      "/ffmpeg-core",
-      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm",
-      "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm",
-    ];
+    // Helper: fetch a URL and convert to a blob URL with the given MIME type
+    const makeBlobURL = async (url: string, mime: string): Promise<string> => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
+      const buf = await res.arrayBuffer();
+      const blob = new Blob([buf], { type: mime });
+      return URL.createObjectURL(blob);
+    };
 
-    let loaded = false;
-    let lastErr: unknown = null;
+    try {
+      // Always create blob URLs — required for Web Worker creation
+      const [coreURL, wasmURL] = await Promise.all([
+        makeBlobURL("/ffmpeg-core/ffmpeg-core.js", "text/javascript"),
+        makeBlobURL("/ffmpeg-core/ffmpeg-core.wasm", "application/wasm"),
+      ]);
 
-    for (const baseURL of baseURLs) {
+      onProgress(20, "Initializing converter...");
+      await ffmpeg.load({ coreURL, wasmURL, workerURL: coreURL });
+    } catch (localErr) {
+      console.warn("Local FFmpeg load failed, trying CDN...", localErr);
+      
       try {
-        let coreURL: string;
-        let wasmURL: string;
-        let workerURL: string;
-        if (baseURL.startsWith("/")) {
-          coreURL = `${baseURL}/ffmpeg-core.js`;
-          wasmURL = `${baseURL}/ffmpeg-core.wasm`;
-          workerURL = `${baseURL}/ffmpeg-core.js`;
-        } else {
-          [coreURL, wasmURL] = await Promise.all([
-            toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-            toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-          ]);
-          workerURL = coreURL;
-        }
-
-        await ffmpeg.load({ coreURL, wasmURL, workerURL });
-        loaded = true;
-        break;
-      } catch (err) {
-        lastErr = err;
-      }
-    }
-
-    if (!loaded) {
+        const cdnBase = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm";
+        const [coreURL, wasmURL] = await Promise.all([
+          makeBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript"),
+          makeBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm"),
+        ]);
+        await ffmpeg.load({ coreURL, wasmURL, workerURL: coreURL });
+      } catch (cdnErr) {
+        console.error("FFmpeg load failed (local + CDN):", localErr, cdnErr);
       // Reset so next attempt can retry
       ffmpegLoading = null;
       ffmpegReady = false;
       ffmpegInstance = null;
-      console.error("FFmpeg load error:", lastErr);
       throw new Error(
         "Could not load the converter engine. Please refresh and try again. If it still fails, try Chrome/Edge or disable strict ad/script blockers."
       );
+      }
     }
     
     ffmpegInstance = ffmpeg;
