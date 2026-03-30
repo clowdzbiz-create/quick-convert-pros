@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => ({
     // Prevent Vite from pre-bundling FFmpeg worker internals (can break worker.js resolution)
     exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
   },
+  worker: {
+    format: "es",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
