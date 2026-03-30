@@ -76,7 +76,10 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
   onProgress(85);
 
   const data = await ffmpeg.readFile(outputName);
-  const blob = new Blob([data], { type: `${targetFormat === "mp3" || targetFormat === "wav" || targetFormat === "ogg" || targetFormat === "aac" || targetFormat === "flac" || targetFormat === "m4a" ? "audio" : "video"}/${targetFormat}` });
+  const uint8 = data as Uint8Array;
+  const audioFormats = ["mp3", "wav", "ogg", "aac", "flac", "m4a"];
+  const mimeType = audioFormats.includes(targetFormat) ? `audio/${targetFormat}` : `video/${targetFormat}`;
+  const blob = new Blob([uint8.buffer], { type: mimeType });
   
   onProgress(95);
   return URL.createObjectURL(blob);
