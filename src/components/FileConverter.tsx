@@ -6,7 +6,7 @@ import { convertFile } from "@/lib/converter";
 type MediaType = "video" | "audio" | "image";
 
 const FORMAT_MAP: Record<MediaType, string[]> = {
-  video: ["MP4", "WebM", "MOV", "AVI", "MKV", "FLV"],
+  video: ["MP4", "WebM", "MOV", "AVI", "MKV", "FLV", "GIF"],
   audio: ["MP3", "WAV", "OGG", "AAC", "FLAC", "M4A"],
   image: ["JPG", "PNG", "WebP", "GIF", "BMP"],
 };

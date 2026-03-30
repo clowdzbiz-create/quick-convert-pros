@@ -7,7 +7,7 @@ const PopularConversions = () => {
     <section className="w-full max-w-3xl mx-auto px-4 py-8">
       <h3 className="text-lg font-bold text-foreground mb-4">Popular Conversions</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {CONVERSION_ROUTES.slice(0, 8).map((r) => (
+        {CONVERSION_ROUTES.slice(0, 12).map((r) => (
           <Link
             key={r.slug}
             to={`/${r.slug}`}
