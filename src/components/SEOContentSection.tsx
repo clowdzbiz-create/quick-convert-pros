@@ -14,12 +14,12 @@ const SEOContentSection = () => {
         <h3 className="text-foreground text-lg font-semibold mt-6 mb-2">Video Conversion</h3>
         <p>
           Convert between all major video formats including{" "}
-          <Link to="/convert-mp4-to-mp3" className="text-primary underline">MP4 to MP3</Link>,{" "}
-          <Link to="/convert-mov-to-mp4" className="text-primary underline">MOV to MP4</Link>,{" "}
-          <Link to="/convert-webm-to-mp4" className="text-primary underline">WebM to MP4</Link>,{" "}
-          <Link to="/convert-avi-to-mp4" className="text-primary underline">AVI to MP4</Link>,{" "}
-          <Link to="/convert-mkv-to-mp4" className="text-primary underline">MKV to MP4</Link>, and{" "}
-          <Link to="/convert-mp4-to-gif" className="text-primary underline">MP4 to GIF</Link>.
+          <Link to="/convert-mp4-to-mp3" className="text-primary underline hover:text-primary/80">MP4 to MP3</Link>,{" "}
+          <Link to="/convert-mov-to-mp4" className="text-primary underline hover:text-primary/80">MOV to MP4</Link>,{" "}
+          <Link to="/convert-webm-to-mp4" className="text-primary underline hover:text-primary/80">WebM to MP4</Link>,{" "}
+          <Link to="/convert-avi-to-mp4" className="text-primary underline hover:text-primary/80">AVI to MP4</Link>,{" "}
+          <Link to="/convert-mkv-to-mp4" className="text-primary underline hover:text-primary/80">MKV to MP4</Link>, and{" "}
+          <Link to="/convert-mp4-to-gif" className="text-primary underline hover:text-primary/80">MP4 to GIF</Link>.
           Perfect for extracting audio from videos, converting iPhone recordings, or preparing videos for social media.
         </p>
 
