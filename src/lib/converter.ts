@@ -262,20 +262,20 @@ function buildFFmpegArgs(input: string, output: string, targetFmt: string, input
   
   if (videoExts.includes(inputExt) && audioExts.includes(targetFmt)) {
     // Extract audio only — much faster, no video re-encoding
-    if (targetFmt === "mp3") return ["-i", input, "-vn", "-ab", "192k", "-f", "mp3", output];
-    if (targetFmt === "wav") return ["-i", input, "-vn", "-f", "wav", output];
-    if (targetFmt === "aac") return ["-i", input, "-vn", "-c:a", "aac", "-b:a", "192k", output];
-    if (targetFmt === "flac") return ["-i", input, "-vn", "-c:a", "flac", output];
-    if (targetFmt === "ogg") return ["-i", input, "-vn", "-c:a", "libvorbis", "-q:a", "6", output];
-    if (targetFmt === "m4a") return ["-i", input, "-vn", "-c:a", "aac", "-b:a", "192k", "-f", "ipod", output];
-    return ["-i", input, "-vn", output];
+    if (targetFmt === "mp3") return ["-i", input, "-vn", "-ab", "192k", "-f", "mp3", "-threads", "1", output];
+    if (targetFmt === "wav") return ["-i", input, "-vn", "-f", "wav", "-threads", "1", output];
+    if (targetFmt === "aac") return ["-i", input, "-vn", "-c:a", "aac", "-b:a", "192k", "-threads", "1", output];
+    if (targetFmt === "flac") return ["-i", input, "-vn", "-c:a", "flac", "-threads", "1", output];
+    if (targetFmt === "ogg") return ["-i", input, "-vn", "-c:a", "libvorbis", "-q:a", "4", "-threads", "1", output];
+    if (targetFmt === "m4a") return ["-i", input, "-vn", "-c:a", "aac", "-b:a", "192k", "-f", "ipod", "-threads", "1", output];
+    return ["-i", input, "-vn", "-threads", "1", output];
   }
 
   // Audio-to-audio conversion
   if (audioExts.includes(inputExt) && audioExts.includes(targetFmt)) {
-    if (targetFmt === "mp3") return ["-i", input, "-ab", "192k", "-f", "mp3", output];
-    if (targetFmt === "ogg") return ["-i", input, "-c:a", "libvorbis", "-q:a", "6", output];
-    return ["-i", input, output];
+    if (targetFmt === "mp3") return ["-i", input, "-ab", "192k", "-f", "mp3", "-threads", "1", output];
+    if (targetFmt === "ogg") return ["-i", input, "-c:a", "libvorbis", "-q:a", "4", "-threads", "1", output];
+    return ["-i", input, "-threads", "1", output];
   }
 
   // Video-to-video: prefer compatibility over aggressive encoder flags
@@ -283,16 +283,22 @@ function buildFFmpegArgs(input: string, output: string, targetFmt: string, input
     if (targetFmt === "webm") {
       return ["-i", input, "-c:v", "libvpx", "-crf", "32", "-b:v", "0", "-deadline", "realtime", "-cpu-used", "8", "-c:a", "libvorbis", "-threads", "1", output];
     }
+    if (targetFmt === "mp4") {
+      return ["-i", input, "-c:v", "libx264", "-preset", "ultrafast", "-crf", "28", "-c:a", "aac", "-b:a", "128k", "-threads", "1", output];
+    }
+    if (targetFmt === "avi") {
+      return ["-i", input, "-c:v", "mpeg4", "-q:v", "8", "-c:a", "mp3", "-b:a", "128k", "-threads", "1", output];
+    }
     return ["-i", input, "-threads", "1", output];
   }
 
   // Video to GIF
   if (videoExts.includes(inputExt) && targetFmt === "gif") {
-    return ["-i", input, "-vf", "fps=10,scale=480:-1:flags=lanczos", "-t", "10", output];
+    return ["-i", input, "-vf", "fps=10,scale=320:-1:flags=fast_bilinear", "-t", "10", "-threads", "1", output];
   }
 
   // Default
-  return ["-i", input, output];
+  return ["-i", input, "-threads", "1", output];
 }
 
 export async function convertFile(
