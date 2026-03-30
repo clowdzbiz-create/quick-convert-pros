@@ -56,11 +56,11 @@ const Footer = () => {
             </ul>
             <h4 className="font-semibold text-foreground text-sm mt-4 mb-2">Resources</h4>
             <ul className="space-y-1.5">
-              <li>
-                <Link to="/blog" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-                  Blog & Guides
-                </Link>
-              </li>
+              <li><Link to="/blog" className="text-xs text-muted-foreground hover:text-primary transition-colors">Blog & Guides</Link></li>
+              <li><Link to="/about" className="text-xs text-muted-foreground hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="text-xs text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
+              <li><Link to="/privacy-policy" className="text-xs text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="text-xs text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
