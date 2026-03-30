@@ -1,0 +1,58 @@
+# Clowd Converter
+
+> Free online file converter. Convert video, audio, and images instantly in your browser. No upload, no sign-up, completely private.
+
+## About
+
+Clowd Converter is a browser-based file conversion tool by Clowd Marketing. Files are processed locally using WebAssembly (FFmpeg.wasm) and Canvas API — nothing is uploaded to any server. The tool is free, requires no account, and works on any device with a modern browser.
+
+## Supported Formats
+
+### Video
+- MP4, WebM, MOV, AVI, MKV, FLV
+- Convert between any video format
+- Extract audio from video (e.g., MP4 to MP3)
+
+### Audio
+- MP3, WAV, OGG, AAC, FLAC, M4A
+- Convert between any audio format
+- Compress audio (WAV to MP3) or uncompress (MP3 to WAV)
+
+### Image
+- JPG, PNG, WebP, GIF, BMP
+- Convert between any image format
+- Optimize for web (PNG to WebP)
+
+## Popular Conversions
+
+- [Convert MP4 to MP3](https://clowdconverter.com/convert-mp4-to-mp3)
+- [Convert WebM to MP4](https://clowdconverter.com/convert-webm-to-mp4)
+- [Convert MOV to MP4](https://clowdconverter.com/convert-mov-to-mp4)
+- [Convert PNG to JPG](https://clowdconverter.com/convert-png-to-jpg)
+- [Convert JPG to PNG](https://clowdconverter.com/convert-jpg-to-png)
+- [Convert PNG to WebP](https://clowdconverter.com/convert-png-to-webp)
+- [Convert MP3 to WAV](https://clowdconverter.com/convert-mp3-to-wav)
+- [Convert WAV to MP3](https://clowdconverter.com/convert-wav-to-mp3)
+- [Convert MP4 to WebM](https://clowdconverter.com/convert-mp4-to-webm)
+- [Convert Video to MP3](https://clowdconverter.com/convert-video-to-mp3)
+
+## Key Features
+
+- **100% Browser-Based**: Files never leave your device
+- **No Sign-Up Required**: Start converting immediately
+- **Free Forever**: No premium tiers, no hidden costs
+- **All Devices**: Works on desktop, tablet, and mobile
+- **Fast**: Image conversion is instant; audio/video uses FFmpeg.wasm
+- **Private**: Zero data collection, zero tracking
+
+## Blog
+
+- [Best Free File Converter in 2026](https://clowdconverter.com/blog/best-free-file-converter-2026)
+- [How to Convert MP4 to MP3](https://clowdconverter.com/blog/how-to-convert-mp4-to-mp3)
+- [JPG vs PNG vs WebP Guide](https://clowdconverter.com/blog/image-format-guide-jpg-png-webp)
+- [How to Reduce Video File Size](https://clowdconverter.com/blog/reduce-video-file-size)
+
+## Contact
+
+Website: https://clowdconverter.com
+Publisher: Clowd Marketing
