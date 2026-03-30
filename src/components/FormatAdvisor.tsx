@@ -52,7 +52,7 @@ const FormatAdvisor = ({ fileName, onSelectFormat }: FormatAdvisorProps) => {
     <div className="converter-card mt-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="w-5 h-5 text-primary" />
-        <h3 className="font-bold text-foreground">AI Format Advisor</h3>
+        <h2 className="font-bold text-foreground text-lg">AI Format Advisor</h2>
         <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
           Powered by AI
         </span>
