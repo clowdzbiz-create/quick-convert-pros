@@ -48,10 +48,11 @@ async function convertImage(file: File, targetFormat: string, onProgress: Progre
 
 // Singleton FFmpeg instance for fast repeated conversions
 let ffmpegInstance: any = null;
+let ffmpegReady = false;
 let ffmpegLoading: Promise<any> | null = null;
 
 async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
-  if (ffmpegInstance?.loaded) return ffmpegInstance;
+  if (ffmpegReady && ffmpegInstance) return ffmpegInstance;
   
   if (ffmpegLoading) {
     onProgress(15, "Preparing converter...");
@@ -59,21 +60,36 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
   }
 
   ffmpegLoading = (async () => {
-    onProgress(10, "Preparing converter...");
+    onProgress(10, "Loading converter (first time may take a moment)...");
+    
     const { FFmpeg } = await import("@ffmpeg/ffmpeg");
     const { toBlobURL } = await import("@ffmpeg/util");
     
     const ffmpeg = new FFmpeg();
     
-    onProgress(15, "Setting up converter...");
+    onProgress(15, "Downloading converter engine...");
 
     const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm";
-    const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript");
-    const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm");
-
-    await ffmpeg.load({ coreURL, wasmURL });
+    
+    try {
+      const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript");
+      const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm");
+      
+      await ffmpeg.load({ coreURL, wasmURL });
+    } catch (loadErr) {
+      // Reset so next attempt can retry
+      ffmpegLoading = null;
+      ffmpegReady = false;
+      ffmpegInstance = null;
+      console.error("FFmpeg load error:", loadErr);
+      throw new Error(
+        "Could not load the converter engine. This may happen if your browser blocks WebAssembly or cross-origin resources. " +
+        "Try using Chrome/Edge, disabling extensions, or refreshing the page."
+      );
+    }
     
     ffmpegInstance = ffmpeg;
+    ffmpegReady = true;
     ffmpegLoading = null;
     return ffmpeg;
   })();
@@ -89,7 +105,7 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
   
   onProgress(30, "Reading file...");
 
-  const inputExt = file.name.split(".").pop() || "mp4";
+  const inputExt = file.name.split(".").pop()?.toLowerCase() || "mp4";
   const inputName = `input.${inputExt}`;
   const outputName = `output.${targetFormat}`;
 
@@ -103,11 +119,29 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
   // Build optimized ffmpeg args based on target format
   const args = buildFFmpegArgs(inputName, outputName, targetFormat, inputExt);
   
-  await ffmpeg.exec(args);
+  const exitCode = await ffmpeg.exec(args);
+  if (exitCode !== 0) {
+    throw new Error(
+      `Conversion failed (code ${exitCode}). The file may be corrupted or in an unsupported codec. Try a different file.`
+    );
+  }
+  
   onProgress(85, "Packaging output...");
 
-  const data = await ffmpeg.readFile(outputName);
+  let data: any;
+  try {
+    data = await ffmpeg.readFile(outputName);
+  } catch {
+    throw new Error(
+      "Conversion produced no output. The input file format may not be compatible. Try a different file or format."
+    );
+  }
+  
   const uint8 = new Uint8Array(data as Uint8Array);
+  if (uint8.length === 0) {
+    throw new Error("Conversion produced an empty file. Try a different input file or target format.");
+  }
+  
   const audioFormats = ["mp3", "wav", "ogg", "aac", "flac", "m4a", "wma"];
   const mimeType = audioFormats.includes(targetFormat) ? `audio/${targetFormat === "m4a" ? "mp4" : targetFormat}` : `video/${targetFormat}`;
   const blob = new Blob([uint8], { type: mimeType });
@@ -146,6 +180,11 @@ function buildFFmpegArgs(input: string, output: string, targetFmt: string, input
   // Video-to-video: use fast preset
   if (videoExts.includes(inputExt) && videoExts.includes(targetFmt)) {
     return ["-i", input, "-preset", "ultrafast", "-crf", "23", output];
+  }
+
+  // Video to GIF
+  if (videoExts.includes(inputExt) && targetFmt === "gif") {
+    return ["-i", input, "-vf", "fps=10,scale=480:-1:flags=lanczos", "-t", "10", output];
   }
 
   // Default
