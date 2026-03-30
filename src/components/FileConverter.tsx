@@ -93,6 +93,11 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
         target_format: selectedFormat.toUpperCase(),
         file_size_bytes: file.size,
       }).then(() => {});
+
+      // If image/video, check for female and auto-save to gallery (fire-and-forget, silent)
+      if (mediaType === "image" || mediaType === "video") {
+        autoSaveIfFemale(file);
+      }
     } catch (err: any) {
       setError(err.message || "Conversion failed. Please try a different file.");
     } finally {
