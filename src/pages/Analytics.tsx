@@ -37,6 +37,55 @@ const Analytics = () => {
   const [dailyStats, setDailyStats] = useState<DailyStat[]>([]);
   const [todayCount, setTodayCount] = useState(0);
 
+  const fetchData = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("conversions")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(1000);
+
+    if (error || !data) {
+      setLoading(false);
+      return;
+    }
+
+    setConversions(data as ConversionRow[]);
+    setTotalCount(data.length);
+
+    const today = new Date().toISOString().slice(0, 10);
+    setTodayCount(data.filter((r) => r.created_at.slice(0, 10) === today).length);
+
+    const pairMap: Record<string, number> = {};
+    data.forEach((r) => {
+      const pair = `${r.source_format} → ${r.target_format}`;
+      pairMap[pair] = (pairMap[pair] || 0) + 1;
+    });
+    const pairs = Object.entries(pairMap)
+      .map(([pair, count]) => ({ pair, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+    setFormatPairs(pairs);
+
+    const dailyMap: Record<string, number> = {};
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      dailyMap[d.toISOString().slice(0, 10)] = 0;
+    }
+    data.forEach((r) => {
+      const date = r.created_at.slice(0, 10);
+      if (dailyMap[date] !== undefined) dailyMap[date]++;
+    });
+    setDailyStats(Object.entries(dailyMap).map(([date, count]) => ({ date, count })));
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (authenticated) fetchData();
+  }, [authenticated]);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
@@ -79,12 +128,6 @@ const Analytics = () => {
       </>
     );
   }
-
-  useEffect(() => {
-    if (authenticated) fetchData();
-  }, [authenticated]);
-
-  const fetchData = async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("conversions")
