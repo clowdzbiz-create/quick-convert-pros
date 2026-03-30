@@ -60,13 +60,20 @@ const AdminPanel = () => {
   const [liveVisitors, setLiveVisitors] = useState(0);
   const [todayVisitors, setTodayVisitors] = useState(0);
 
+  const storedPassword = () => sessionStorage.getItem("admin_pwd") || "";
+
   const fetchData = async () => {
     setLoading(true);
-    const [convRes, visRes, photoRes] = await Promise.all([
-      supabase.from("conversions").select("*").order("created_at", { ascending: false }).limit(1000),
-      supabase.from("visitors").select("*").order("created_at", { ascending: false }).limit(1000),
-      supabase.from("gallery_photos").select("*").order("created_at", { ascending: false }).limit(200),
-    ]);
+    const { data: result, error } = await supabase.functions.invoke("admin-data", {
+      body: { password: storedPassword() },
+    });
+    if (error || !result) {
+      setLoading(false);
+      return;
+    }
+    const convRes = { data: result.conversions };
+    const visRes = { data: result.visitors };
+    const photoRes = { data: result.photos };
 
     const convData = (convRes.data as ConversionRow[]) || [];
     const visData = (visRes.data as VisitorRow[]) || [];
