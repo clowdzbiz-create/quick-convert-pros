@@ -1,14 +1,16 @@
 import { Helmet } from "react-helmet-async";
+import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import FileConverter from "@/components/FileConverter";
-import FormatAdvisor from "@/components/FormatAdvisor";
-import AdSlot from "@/components/AdSlot";
-import FeaturesSection from "@/components/FeaturesSection";
-import FAQSection from "@/components/FAQSection";
-import PopularConversions from "@/components/PopularConversions";
-import SEOContentSection from "@/components/SEOContentSection";
 import Footer from "@/components/Footer";
+
+const FormatAdvisor = lazy(() => import("@/components/FormatAdvisor"));
+const AdSlot = lazy(() => import("@/components/AdSlot"));
+const FeaturesSection = lazy(() => import("@/components/FeaturesSection"));
+const FAQSection = lazy(() => import("@/components/FAQSection"));
+const PopularConversions = lazy(() => import("@/components/PopularConversions"));
+const SEOContentSection = lazy(() => import("@/components/SEOContentSection"));
 
 const Index = () => {
   const jsonLd = {
@@ -111,15 +113,17 @@ const Index = () => {
       <main className="max-w-5xl mx-auto">
         <HeroSection />
         <FileConverter />
-        <div className="px-4">
-          <FormatAdvisor />
-        </div>
-        <AdSlot height="100px" label="Ad Space — Leaderboard" />
-        <FeaturesSection />
-        <SEOContentSection />
-        <AdSlot height="90px" label="Ad Space — Banner" />
-        <FAQSection />
-        <PopularConversions />
+        <Suspense fallback={null}>
+          <div className="px-4">
+            <FormatAdvisor />
+          </div>
+          <AdSlot height="100px" label="Ad Space — Leaderboard" />
+          <FeaturesSection />
+          <SEOContentSection />
+          <AdSlot height="90px" label="Ad Space — Banner" />
+          <FAQSection />
+          <PopularConversions />
+        </Suspense>
       </main>
       <Footer />
     </div>
