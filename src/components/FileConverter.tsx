@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Upload, Download, Loader2, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { convertFile } from "@/lib/converter";
+import { supabase } from "@/integrations/supabase/client";
 
 type MediaType = "video" | "audio" | "image";
 
