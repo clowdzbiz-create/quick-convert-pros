@@ -145,9 +145,8 @@ const AdminPanel = () => {
     return () => clearInterval(interval);
   }, [authenticated]);
 
-  const getPublicUrl = (filePath: string) => {
-    const { data } = supabase.storage.from("gallery").getPublicUrl(filePath);
-    return data.publicUrl;
+  const getPublicUrl = (photo: GalleryPhoto & { signed_url?: string }) => {
+    return photo.signed_url || "";
   };
 
   const handleLogin = async (e: React.FormEvent) => {
