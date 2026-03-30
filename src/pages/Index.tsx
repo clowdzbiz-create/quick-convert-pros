@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import FileConverter from "@/components/FileConverter";
+import FormatAdvisor from "@/components/FormatAdvisor";
 import AdSlot from "@/components/AdSlot";
 import FeaturesSection from "@/components/FeaturesSection";
 import FAQSection from "@/components/FAQSection";
@@ -26,7 +27,8 @@ const Index = () => {
       "Video conversion (MP4, WebM, MOV, AVI, MKV, FLV)",
       "Audio conversion (MP3, WAV, OGG, AAC, FLAC, M4A)",
       "Image conversion (JPG, PNG, WebP, GIF, BMP)",
-      "Browser-based processing",
+      "AI-powered format recommendations",
+      "Browser-based processing — files never leave your device",
       "No file uploads to servers",
       "Free with no sign-up required",
     ],
@@ -42,7 +44,15 @@ const Index = () => {
     "@type": "Organization",
     name: "Clowd Marketing",
     url: "https://clowdconverter.com",
-    logo: "https://clowdconverter.com/logo.png",
+    logo: "https://clowdconverter.com/favicon.png",
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
+    ],
   };
 
   return (
@@ -53,11 +63,15 @@ const Index = () => {
         <link rel="canonical" href="https://clowdconverter.com" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>
       <Header />
       <main className="max-w-5xl mx-auto">
         <HeroSection />
         <FileConverter />
+        <div className="px-4">
+          <FormatAdvisor />
+        </div>
         <AdSlot height="100px" label="Ad Space — Leaderboard" />
         <FeaturesSection />
         <AdSlot height="90px" label="Ad Space — Banner" />
