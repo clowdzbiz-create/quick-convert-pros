@@ -15,36 +15,42 @@ Clowd Converter is a browser-based file conversion tool by Clowd Marketing. File
 - **Fast**: Image conversion is instant; audio/video uses FFmpeg WebAssembly
 - **No Installation**: No app or software download needed
 - **Offline Capable**: Once loaded, works without internet
+- **No File Size Surprises**: Supports files up to 500MB
 
 ## Supported Formats
 
 ### Video
-- MP4, WebM, MOV, AVI, MKV, FLV
-- Convert between any video format
-- Extract audio from video (e.g., MP4 to MP3)
+MP4, WebM, MOV, AVI, MKV, FLV — convert between any video format, or extract audio
 
 ### Audio
-- MP3, WAV, OGG, AAC, FLAC, M4A
-- Convert between any audio format
-- Compress audio (WAV to MP3) or uncompress (MP3 to WAV)
+MP3, WAV, OGG, AAC, FLAC, M4A — convert, compress, or decompress audio
 
 ### Image
-- JPG, PNG, WebP, GIF, BMP
-- Convert between any image format
-- Optimize for web (PNG/JPG to WebP)
+JPG, PNG, WebP, GIF, BMP — convert, optimize, or change format instantly
 
-## Popular Conversions
+## All Conversion Pages
 
-- [Convert MP4 to MP3](https://clowdconverter.com/convert-mp4-to-mp3) — Extract audio from video
-- [Convert WebM to MP4](https://clowdconverter.com/convert-webm-to-mp4) — Universal video compatibility
-- [Convert MOV to MP4](https://clowdconverter.com/convert-mov-to-mp4) — iPhone video sharing
-- [Convert PNG to JPG](https://clowdconverter.com/convert-png-to-jpg) — Reduce image size
-- [Convert JPG to PNG](https://clowdconverter.com/convert-jpg-to-png) — Add transparency support
-- [Convert PNG to WebP](https://clowdconverter.com/convert-png-to-webp) — Web optimization
-- [Convert MP3 to WAV](https://clowdconverter.com/convert-mp3-to-wav) — Lossless audio editing
-- [Convert WAV to MP3](https://clowdconverter.com/convert-wav-to-mp3) — Compress audio files
-- [Convert MP4 to WebM](https://clowdconverter.com/convert-mp4-to-webm) — HTML5 web video
-- [Convert Video to MP3](https://clowdconverter.com/convert-video-to-mp3) — Extract any video audio
+- [MP4 to MP3](https://clowdconverter.com/convert-mp4-to-mp3)
+- [Video to MP3](https://clowdconverter.com/convert-video-to-mp3)
+- [WebM to MP4](https://clowdconverter.com/convert-webm-to-mp4)
+- [MOV to MP4](https://clowdconverter.com/convert-mov-to-mp4)
+- [MP4 to WebM](https://clowdconverter.com/convert-mp4-to-webm)
+- [MP4 to MOV](https://clowdconverter.com/convert-mp4-to-mov)
+- [AVI to MP4](https://clowdconverter.com/convert-avi-to-mp4)
+- [MKV to MP4](https://clowdconverter.com/convert-mkv-to-mp4)
+- [PNG to JPG](https://clowdconverter.com/convert-png-to-jpg)
+- [JPG to PNG](https://clowdconverter.com/convert-jpg-to-png)
+- [PNG to WebP](https://clowdconverter.com/convert-png-to-webp)
+- [JPG to WebP](https://clowdconverter.com/convert-jpg-to-webp)
+- [WebP to JPG](https://clowdconverter.com/convert-webp-to-jpg)
+- [WebP to PNG](https://clowdconverter.com/convert-webp-to-png)
+- [GIF to PNG](https://clowdconverter.com/convert-gif-to-png)
+- [BMP to JPG](https://clowdconverter.com/convert-bmp-to-jpg)
+- [MP3 to WAV](https://clowdconverter.com/convert-mp3-to-wav)
+- [WAV to MP3](https://clowdconverter.com/convert-wav-to-mp3)
+- [FLAC to MP3](https://clowdconverter.com/convert-flac-to-mp3)
+- [OGG to MP3](https://clowdconverter.com/convert-ogg-to-mp3)
+- [AAC to MP3](https://clowdconverter.com/convert-aac-to-mp3)
 
 ## Use Cases
 
@@ -54,6 +60,8 @@ Clowd Converter is a browser-based file conversion tool by Clowd Marketing. File
 - **Musicians**: Convert between lossless and compressed formats
 - **Social media managers**: Prepare media for Instagram, TikTok, YouTube
 - **General users**: Share iPhone MOV videos as MP4, convert HEIC photos
+- **Podcasters**: Convert WAV recordings to MP3 for distribution
+- **Gamers**: Convert OGG game audio to MP3 for playlists
 
 ## Blog & Guides
 
@@ -62,7 +70,7 @@ Clowd Converter is a browser-based file conversion tool by Clowd Marketing. File
 - [JPG vs PNG vs WebP Guide](https://clowdconverter.com/blog/image-format-guide-jpg-png-webp)
 - [How to Reduce Video File Size](https://clowdconverter.com/blog/reduce-video-file-size)
 - [HEIC to JPG Guide](https://clowdconverter.com/blog/convert-heic-to-jpg-guide)
-- [Audio Format Comparison: MP3 vs WAV vs FLAC vs AAC](https://clowdconverter.com/blog/audio-format-comparison-mp3-wav-flac-aac)
+- [Audio Format Comparison](https://clowdconverter.com/blog/audio-format-comparison-mp3-wav-flac-aac)
 - [How to Compress Images for Web](https://clowdconverter.com/blog/compress-images-for-web)
 - [How to Extract Audio from Video](https://clowdconverter.com/blog/how-to-extract-audio-from-video)
 - [Video Formats Explained](https://clowdconverter.com/blog/video-formats-explained)
@@ -75,8 +83,9 @@ Clowd Converter is a browser-based file conversion tool by Clowd Marketing. File
 - Frontend: React + TypeScript
 - Video/Audio processing: FFmpeg.wasm (WebAssembly)
 - Image processing: HTML5 Canvas API
-- AI Features: Lovable AI (format recommendations)
+- AI Features: AI-powered format recommendation engine
 - Hosting: Lovable Cloud
+- Privacy: Zero server-side file processing
 
 ## Contact
 
