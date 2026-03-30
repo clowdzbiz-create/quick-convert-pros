@@ -48,6 +48,7 @@ const BlogPost = () => {
         <meta name="description" content={post.metaDescription} />
         <link rel="canonical" href={`https://clowdconverter.com/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>
       <Header />
       <main className="max-w-3xl mx-auto px-4 py-8">

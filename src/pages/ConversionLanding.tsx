@@ -68,6 +68,7 @@ const ConversionLanding = () => {
         <link rel="canonical" href={`https://clowdconverter.com/${route.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       </Helmet>
       <Header />
       <main className="max-w-5xl mx-auto">
