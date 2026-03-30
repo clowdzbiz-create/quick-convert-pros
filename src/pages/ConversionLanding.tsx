@@ -51,6 +51,15 @@ const ConversionLanding = () => {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
+      { "@type": "ListItem", position: 2, name: route.h1, item: `https://clowdconverter.com/${route.slug}` },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
