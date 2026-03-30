@@ -10,7 +10,7 @@ import {
   Image as ImageIcon, Users, UserCheck, Radio, Eye
 } from "lucide-react";
 
-const ADMIN_PASSWORD = "clowd2026";
+// Password validated server-side via edge function
 
 interface ConversionRow {
   source_format: string;
