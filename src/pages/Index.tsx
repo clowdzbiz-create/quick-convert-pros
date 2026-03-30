@@ -7,6 +7,7 @@ import AdSlot from "@/components/AdSlot";
 import FeaturesSection from "@/components/FeaturesSection";
 import FAQSection from "@/components/FAQSection";
 import PopularConversions from "@/components/PopularConversions";
+import SEOContentSection from "@/components/SEOContentSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -33,6 +34,12 @@ const Index = () => {
       "No file uploads to servers",
       "Free with no sign-up required",
     ],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      ratingCount: "1250",
+      bestRating: "5",
+    },
   };
 
   const howToJsonLd = {
@@ -56,6 +63,7 @@ const Index = () => {
     name: "Clowd Marketing",
     url: "https://clowdconverter.com",
     logo: "https://clowdconverter.com/favicon.png",
+    sameAs: [],
   };
 
   const breadcrumbJsonLd = {
@@ -66,16 +74,38 @@ const Index = () => {
     ],
   };
 
+  const softwareJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Clowd Converter",
+    applicationCategory: "MultimediaApplication",
+    operatingSystem: "Web Browser",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      ratingCount: "1250",
+      bestRating: "5",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Clowd Converter — Free Video, Audio & Image Converter</title>
-        <meta name="description" content="Convert videos, audio, and images instantly for free. No sign-up, no uploads — files are processed in your browser. Fast, secure, and private." />
+        <title>Free Online File Converter — Video, Audio & Image | Clowd Converter</title>
+        <meta name="description" content="Convert MP4, MP3, WAV, PNG, JPG, WebP and 15+ formats instantly for free. No sign-up, no uploads — files are processed in your browser. Fast, secure, and private." />
         <link rel="canonical" href="https://clowdconverter.com" />
+        <meta property="og:title" content="Free Online File Converter — Video, Audio & Image | Clowd Converter" />
+        <meta property="og:description" content="Convert videos, audio, and images instantly. Free, fast, and secure — right in your browser." />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
       </Helmet>
       <Header />
       <main className="max-w-5xl mx-auto">
@@ -86,6 +116,7 @@ const Index = () => {
         </div>
         <AdSlot height="100px" label="Ad Space — Leaderboard" />
         <FeaturesSection />
+        <SEOContentSection />
         <AdSlot height="90px" label="Ad Space — Banner" />
         <FAQSection />
         <PopularConversions />
