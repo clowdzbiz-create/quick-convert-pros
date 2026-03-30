@@ -70,6 +70,8 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
     onProgress(15, "Downloading converter engine...");
 
     const baseURLs = [
+      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.15/dist/esm",
+      "https://unpkg.com/@ffmpeg/core@0.12.15/dist/esm",
       "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm",
       "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm",
     ];
@@ -134,11 +136,20 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
 
   // Build optimized ffmpeg args based on target format
   const args = buildFFmpegArgs(inputName, outputName, targetFormat, inputExt);
-  
-  const exitCode = await ffmpeg.exec(args);
+  const compatibilityArgs = ["-i", inputName, outputName];
+
+  let exitCode = await ffmpeg.exec(args);
+
+  // Reliability fallback: retry with minimal command if optimized args fail
+  if (exitCode !== 0 && args.join(" ") !== compatibilityArgs.join(" ")) {
+    onProgress(55, "Retrying in compatibility mode...");
+    try { await ffmpeg.deleteFile(outputName); } catch {}
+    exitCode = await ffmpeg.exec(compatibilityArgs);
+  }
+
   if (exitCode !== 0) {
     throw new Error(
-      `Conversion failed (code ${exitCode}). The file may be corrupted or in an unsupported codec. Try a different file.`
+      `Conversion failed (code ${exitCode}). The input codec/container pair may not be supported for this target format.`
     );
   }
   
@@ -193,9 +204,9 @@ function buildFFmpegArgs(input: string, output: string, targetFmt: string, input
     return ["-i", input, output];
   }
 
-  // Video-to-video: use fast preset
+  // Video-to-video: prefer compatibility over aggressive encoder flags
   if (videoExts.includes(inputExt) && videoExts.includes(targetFmt)) {
-    return ["-i", input, "-preset", "ultrafast", "-crf", "23", output];
+    return ["-i", input, output];
   }
 
   // Video to GIF
@@ -213,7 +224,7 @@ export async function convertFile(
   mediaType: "video" | "audio" | "image",
   onProgress: ProgressCallback
 ): Promise<string> {
-  if (mediaType === "image") {
+  if (mediaType === "image" && file.type.startsWith("image/")) {
     return convertImage(file, targetFormat, onProgress);
   }
   return convertMedia(file, targetFormat, onProgress);
