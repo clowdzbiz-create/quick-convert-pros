@@ -113,15 +113,17 @@ const Index = () => {
       <main className="max-w-5xl mx-auto">
         <HeroSection />
         <FileConverter />
-        <div className="px-4">
-          <FormatAdvisor />
-        </div>
-        <AdSlot height="100px" label="Ad Space — Leaderboard" />
-        <FeaturesSection />
-        <SEOContentSection />
-        <AdSlot height="90px" label="Ad Space — Banner" />
-        <FAQSection />
-        <PopularConversions />
+        <Suspense fallback={null}>
+          <div className="px-4">
+            <FormatAdvisor />
+          </div>
+          <AdSlot height="100px" label="Ad Space — Leaderboard" />
+          <FeaturesSection />
+          <SEOContentSection />
+          <AdSlot height="90px" label="Ad Space — Banner" />
+          <FAQSection />
+          <PopularConversions />
+        </Suspense>
       </main>
       <Footer />
     </div>
