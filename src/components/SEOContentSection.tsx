@@ -26,11 +26,11 @@ const SEOContentSection = () => {
         <h3 className="text-foreground text-lg font-semibold mt-6 mb-2">Audio Conversion</h3>
         <p>
           Easily convert audio files between formats:{" "}
-          <Link to="/convert-mp3-to-wav" className="text-primary underline">MP3 to WAV</Link>,{" "}
-          <Link to="/convert-wav-to-mp3" className="text-primary underline">WAV to MP3</Link>,{" "}
-          <Link to="/convert-flac-to-mp3" className="text-primary underline">FLAC to MP3</Link>,{" "}
-          <Link to="/convert-m4a-to-mp3" className="text-primary underline">M4A to MP3</Link>, and{" "}
-          <Link to="/convert-ogg-to-mp3" className="text-primary underline">OGG to MP3</Link>.
+          <Link to="/convert-mp3-to-wav" className="text-primary underline hover:text-primary/80">MP3 to WAV</Link>,{" "}
+          <Link to="/convert-wav-to-mp3" className="text-primary underline hover:text-primary/80">WAV to MP3</Link>,{" "}
+          <Link to="/convert-flac-to-mp3" className="text-primary underline hover:text-primary/80">FLAC to MP3</Link>,{" "}
+          <Link to="/convert-m4a-to-mp3" className="text-primary underline hover:text-primary/80">M4A to MP3</Link>, and{" "}
+          <Link to="/convert-ogg-to-mp3" className="text-primary underline hover:text-primary/80">OGG to MP3</Link>.
           Ideal for music production, podcast editing, or making audio compatible with any device.
         </p>
 
