@@ -177,9 +177,20 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
 
   // Build optimized ffmpeg args based on target format
   const args = buildFFmpegArgs(inputName, outputName, targetFormat, inputExt);
+  const targetFallbackArgs =
+    targetFormat === "webm"
+      ? ["-i", inputName, "-c:v", "libvpx", "-crf", "34", "-b:v", "0", "-an", outputName]
+      : null;
   const compatibilityArgs = ["-i", inputName, outputName];
 
   let exitCode = await ffmpeg.exec(args);
+
+  // Target-specific reliability fallback (WEBM can fail on audio codec combinations in wasm builds)
+  if (exitCode !== 0 && targetFallbackArgs && args.join(" ") !== targetFallbackArgs.join(" ")) {
+    onProgress(55, "Retrying with WEBM-safe settings...");
+    try { await ffmpeg.deleteFile(outputName); } catch {}
+    exitCode = await ffmpeg.exec(targetFallbackArgs);
+  }
 
   // Reliability fallback: retry with minimal command if optimized args fail
   if (exitCode !== 0 && args.join(" ") !== compatibilityArgs.join(" ")) {
@@ -247,6 +258,9 @@ function buildFFmpegArgs(input: string, output: string, targetFmt: string, input
 
   // Video-to-video: prefer compatibility over aggressive encoder flags
   if (videoExts.includes(inputExt) && videoExts.includes(targetFmt)) {
+    if (targetFmt === "webm") {
+      return ["-i", input, "-c:v", "libvpx", "-crf", "32", "-b:v", "0", "-c:a", "libvorbis", output];
+    }
     return ["-i", input, output];
   }
 
