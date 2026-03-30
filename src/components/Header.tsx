@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <header className="w-full py-4 px-6">
-      <nav className="max-w-5xl mx-auto flex items-center justify-between">
+      <nav aria-label="Main navigation" className="max-w-5xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-foreground">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
             <Cloud className="w-5 h-5 text-primary" />
