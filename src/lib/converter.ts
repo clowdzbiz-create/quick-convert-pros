@@ -69,22 +69,38 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
     
     onProgress(15, "Downloading converter engine...");
 
-    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm";
-    
-    try {
-      const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript");
-      const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm");
-      
-      await ffmpeg.load({ coreURL, wasmURL });
-    } catch (loadErr) {
+    const baseURLs = [
+      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm",
+      "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm",
+    ];
+
+    let loaded = false;
+    let lastErr: unknown = null;
+
+    for (const baseURL of baseURLs) {
+      try {
+        const [coreURL, wasmURL, workerURL] = await Promise.all([
+          toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+          toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+          toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, "text/javascript"),
+        ]);
+
+        await ffmpeg.load({ coreURL, wasmURL, workerURL });
+        loaded = true;
+        break;
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+
+    if (!loaded) {
       // Reset so next attempt can retry
       ffmpegLoading = null;
       ffmpegReady = false;
       ffmpegInstance = null;
-      console.error("FFmpeg load error:", loadErr);
+      console.error("FFmpeg load error:", lastErr);
       throw new Error(
-        "Could not load the converter engine. This may happen if your browser blocks WebAssembly or cross-origin resources. " +
-        "Try using Chrome/Edge, disabling extensions, or refreshing the page."
+        "Could not load the converter engine. Please refresh and try again. If it still fails, try Chrome/Edge or disable strict ad/script blockers."
       );
     }
     
