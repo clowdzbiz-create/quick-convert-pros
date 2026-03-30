@@ -76,10 +76,10 @@ async function convertMedia(file: File, targetFormat: string, onProgress: Progre
   onProgress(85);
 
   const data = await ffmpeg.readFile(outputName);
-  const uint8 = data as Uint8Array;
+  const uint8 = new Uint8Array(data as Uint8Array);
   const audioFormats = ["mp3", "wav", "ogg", "aac", "flac", "m4a"];
   const mimeType = audioFormats.includes(targetFormat) ? `audio/${targetFormat}` : `video/${targetFormat}`;
-  const blob = new Blob([uint8.buffer], { type: mimeType });
+  const blob = new Blob([uint8], { type: mimeType });
   
   onProgress(95);
   return URL.createObjectURL(blob);
