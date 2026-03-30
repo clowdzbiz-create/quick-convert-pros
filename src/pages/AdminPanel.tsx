@@ -355,7 +355,7 @@ const AdminPanel = () => {
                     <div key={photo.id} className="group relative aspect-square rounded-lg overflow-hidden bg-muted border border-border">
                       {photo.mime_type?.startsWith("video/") ? (
                         <video
-                          src={getPublicUrl(photo.file_path)}
+                          src={getPublicUrl(photo)}
                           className="w-full h-full object-cover"
                           muted
                           playsInline
