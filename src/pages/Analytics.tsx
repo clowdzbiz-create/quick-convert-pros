@@ -3,7 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { BarChart3, TrendingUp, FileType, Calendar } from "lucide-react";
+import { BarChart3, TrendingUp, FileType, Calendar, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const ADMIN_PASSWORD = "clowd2026";
 
 interface ConversionRow {
   source_format: string;
