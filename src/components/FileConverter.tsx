@@ -186,6 +186,12 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
     const ext = selectedFormat.toLowerCase() === "jpg" ? "jpeg" : selectedFormat.toLowerCase();
     a.download = `${file.name.replace(/\.[^.]+$/, "")}.${ext}`;
     a.click();
+    // Reset for back-to-back conversions
+    URL.revokeObjectURL(resultUrl);
+    setResultUrl(null);
+    setFile(null);
+    setProgress(0);
+    setProgressLabel("");
   };
 
   const tabs: { key: MediaType; label: string }[] = [
