@@ -19,7 +19,7 @@ const PopularConversions = () => {
               <Link
                 key={r.slug}
                 to={`/${r.slug}`}
-                className="flex items-center gap-2 text-sm text-primary font-medium hover:underline py-1"
+                className="flex items-center gap-2 text-sm text-primary font-medium underline decoration-primary/30 hover:decoration-primary py-1"
               >
                 <ArrowRight className="w-3 h-3 shrink-0" />
                 {r.from} to {r.to}
@@ -35,7 +35,7 @@ const PopularConversions = () => {
               <Link
                 key={r.slug}
                 to={`/${r.slug}`}
-                className="flex items-center gap-2 text-sm text-primary font-medium hover:underline py-1"
+                className="flex items-center gap-2 text-sm text-primary font-medium underline decoration-primary/30 hover:decoration-primary py-1"
               >
                 <ArrowRight className="w-3 h-3 shrink-0" />
                 {r.from} to {r.to}
@@ -51,7 +51,7 @@ const PopularConversions = () => {
               <Link
                 key={r.slug}
                 to={`/${r.slug}`}
-                className="flex items-center gap-2 text-sm text-primary font-medium hover:underline py-1"
+                className="flex items-center gap-2 text-sm text-primary font-medium underline decoration-primary/30 hover:decoration-primary py-1"
               >
                 <ArrowRight className="w-3 h-3 shrink-0" />
                 {r.from} to {r.to}
