@@ -17,9 +17,14 @@ const ACCEPT_MAP: Record<MediaType, string> = {
   image: "image/*",
 };
 
-const FileConverter = () => {
-  const [mediaType, setMediaType] = useState<MediaType>("video");
-  const [selectedFormat, setSelectedFormat] = useState<string>("MP4");
+interface FileConverterProps {
+  defaultMediaType?: MediaType;
+  defaultFormat?: string;
+}
+
+const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) => {
+  const [mediaType, setMediaType] = useState<MediaType>(defaultMediaType || "video");
+  const [selectedFormat, setSelectedFormat] = useState<string>(defaultFormat || FORMAT_MAP[defaultMediaType || "video"][0]);
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [converting, setConverting] = useState(false);
