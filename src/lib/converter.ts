@@ -54,20 +54,19 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
   if (ffmpegInstance?.loaded) return ffmpegInstance;
   
   if (ffmpegLoading) {
-    onProgress(15, "Waiting for converter engine...");
+    onProgress(15, "Preparing converter...");
     return ffmpegLoading;
   }
 
   ffmpegLoading = (async () => {
-    onProgress(10, "Loading converter engine...");
+    onProgress(10, "Preparing converter...");
     const { FFmpeg } = await import("@ffmpeg/ffmpeg");
     const { toBlobURL } = await import("@ffmpeg/util");
     
     const ffmpeg = new FFmpeg();
     
-    onProgress(15, "Downloading FFmpeg core...");
+    onProgress(15, "Setting up converter...");
 
-    // Use toBlobURL for proper CORS handling and caching
     const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm";
     const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript");
     const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm");
