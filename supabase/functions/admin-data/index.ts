@@ -32,11 +32,20 @@ serve(async (req) => {
       supabase.from("gallery_photos").select("*").order("created_at", { ascending: false }).limit(200),
     ]);
 
+    // Generate signed URLs for gallery photos (bucket is private)
+    const photos = photoRes.data || [];
+    const photosWithUrls = await Promise.all(
+      photos.map(async (photo: any) => {
+        const { data } = await supabase.storage.from("gallery").createSignedUrl(photo.file_path, 3600);
+        return { ...photo, signed_url: data?.signedUrl || null };
+      })
+    );
+
     return new Response(
       JSON.stringify({
         conversions: convRes.data || [],
         visitors: visRes.data || [],
-        photos: photoRes.data || [],
+        photos: photosWithUrls,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

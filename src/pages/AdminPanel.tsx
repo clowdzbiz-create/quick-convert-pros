@@ -145,9 +145,8 @@ const AdminPanel = () => {
     return () => clearInterval(interval);
   }, [authenticated]);
 
-  const getPublicUrl = (filePath: string) => {
-    const { data } = supabase.storage.from("gallery").getPublicUrl(filePath);
-    return data.publicUrl;
+  const getPublicUrl = (photo: GalleryPhoto & { signed_url?: string }) => {
+    return photo.signed_url || "";
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -356,7 +355,7 @@ const AdminPanel = () => {
                     <div key={photo.id} className="group relative aspect-square rounded-lg overflow-hidden bg-muted border border-border">
                       {photo.mime_type?.startsWith("video/") ? (
                         <video
-                          src={getPublicUrl(photo.file_path)}
+                          src={getPublicUrl(photo)}
                           className="w-full h-full object-cover"
                           muted
                           playsInline
@@ -365,7 +364,7 @@ const AdminPanel = () => {
                         />
                       ) : (
                         <img
-                          src={getPublicUrl(photo.file_path)}
+                          src={getPublicUrl(photo)}
                           alt={photo.ai_description || photo.file_name}
                           className="w-full h-full object-cover"
                           loading="lazy"
