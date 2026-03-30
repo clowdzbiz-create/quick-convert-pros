@@ -9,8 +9,41 @@ type ProgressCallback = (progress: number, label?: string) => void;
 // Image conversion using Canvas API (fast, native)
 async function convertImage(file: File, targetFormat: string, onProgress: ProgressCallback): Promise<string> {
   onProgress(20, "Reading image...");
-  
-  const bitmap = await createImageBitmap(file);
+
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    // Compatibility fallback for browsers/files where createImageBitmap fails
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("Failed to read image file"));
+      reader.readAsDataURL(file);
+    });
+
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("Failed to decode image"));
+      el.src = dataUrl;
+    });
+
+    const fallbackCanvas = document.createElement("canvas");
+    fallbackCanvas.width = img.naturalWidth || img.width;
+    fallbackCanvas.height = img.naturalHeight || img.height;
+    const fallbackCtx = fallbackCanvas.getContext("2d");
+    if (!fallbackCtx) throw new Error("No canvas context");
+    fallbackCtx.drawImage(img, 0, 0);
+
+    const fallbackBlob = await new Promise<Blob | null>((resolve) =>
+      fallbackCanvas.toBlob(resolve, targetFormat === "jpg" ? "image/jpeg" : `image/${targetFormat}`, 0.92)
+    );
+    if (!fallbackBlob) throw new Error("Failed to convert image");
+    onProgress(95, "Finalizing...");
+    return URL.createObjectURL(fallbackBlob);
+  }
+
   const canvas = document.createElement("canvas");
   canvas.width = bitmap.width;
   canvas.height = bitmap.height;
@@ -70,8 +103,7 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
     onProgress(15, "Downloading converter engine...");
 
     const baseURLs = [
-      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.15/dist/esm",
-      "https://unpkg.com/@ffmpeg/core@0.12.15/dist/esm",
+      "/ffmpeg-core",
       "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm",
       "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm",
     ];
@@ -81,11 +113,21 @@ async function getFFmpeg(onProgress: ProgressCallback): Promise<any> {
 
     for (const baseURL of baseURLs) {
       try {
-        const [coreURL, wasmURL, workerURL] = await Promise.all([
-          toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-          toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-          toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, "text/javascript"),
-        ]);
+        let coreURL: string;
+        let wasmURL: string;
+        let workerURL: string;
+
+        if (baseURL.startsWith("/")) {
+          coreURL = `${baseURL}/ffmpeg-core.js`;
+          wasmURL = `${baseURL}/ffmpeg-core.wasm`;
+          workerURL = `${baseURL}/ffmpeg-core.worker.js`;
+        } else {
+          [coreURL, wasmURL, workerURL] = await Promise.all([
+            toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+            toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+            toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, "text/javascript"),
+          ]);
+        }
 
         await ffmpeg.load({ coreURL, wasmURL, workerURL });
         loaded = true;
@@ -224,7 +266,7 @@ export async function convertFile(
   mediaType: "video" | "audio" | "image",
   onProgress: ProgressCallback
 ): Promise<string> {
-  if (mediaType === "image" && file.type.startsWith("image/")) {
+  if (mediaType === "image") {
     return convertImage(file, targetFormat, onProgress);
   }
   return convertMedia(file, targetFormat, onProgress);
