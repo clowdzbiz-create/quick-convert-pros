@@ -17,6 +17,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
 const Analytics = lazy(() => import("./pages/Analytics.tsx"));
+const Gallery = lazy(() => import("./pages/Gallery.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/gallery" element={<Gallery />} />
                 <Route path="/:slug" element={<ConversionLanding />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

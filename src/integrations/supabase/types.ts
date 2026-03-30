@@ -38,6 +38,36 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_photos: {
+        Row: {
+          ai_description: string | null
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number | null
+          id: string
+          mime_type: string | null
+        }
+        Insert: {
+          ai_description?: string | null
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+        }
+        Update: {
+          ai_description?: string | null
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
