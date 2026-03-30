@@ -128,52 +128,6 @@ const Analytics = () => {
       </>
     );
   }
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("conversions")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1000);
-
-    if (error || !data) {
-      setLoading(false);
-      return;
-    }
-
-    setConversions(data as ConversionRow[]);
-    setTotalCount(data.length);
-
-    // Today's count
-    const today = new Date().toISOString().slice(0, 10);
-    setTodayCount(data.filter((r) => r.created_at.slice(0, 10) === today).length);
-
-    // Format pair stats
-    const pairMap: Record<string, number> = {};
-    data.forEach((r) => {
-      const pair = `${r.source_format} → ${r.target_format}`;
-      pairMap[pair] = (pairMap[pair] || 0) + 1;
-    });
-    const pairs = Object.entries(pairMap)
-      .map(([pair, count]) => ({ pair, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-    setFormatPairs(pairs);
-
-    // Daily stats (last 14 days)
-    const dailyMap: Record<string, number> = {};
-    for (let i = 13; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      dailyMap[d.toISOString().slice(0, 10)] = 0;
-    }
-    data.forEach((r) => {
-      const date = r.created_at.slice(0, 10);
-      if (dailyMap[date] !== undefined) dailyMap[date]++;
-    });
-    setDailyStats(Object.entries(dailyMap).map(([date, count]) => ({ date, count })));
-
-    setLoading(false);
-  };
 
   const maxDaily = Math.max(...dailyStats.map((d) => d.count), 1);
 
