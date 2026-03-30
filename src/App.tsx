@@ -38,6 +38,10 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/blog" element={<BlogIndex />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/:slug" element={<ConversionLanding />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
