@@ -39,6 +39,21 @@ const Index = () => {
     },
   };
 
+  const howToJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Convert Files Online for Free",
+    description: "Convert video, audio, or image files instantly using Clowd Converter. No upload, no sign-up required.",
+    step: [
+      { "@type": "HowToStep", name: "Choose media type", text: "Select whether you want to convert a video, audio, or image file." },
+      { "@type": "HowToStep", name: "Upload your file", text: "Drag and drop your file or click to browse. Files up to 500MB are supported." },
+      { "@type": "HowToStep", name: "Select output format", text: "Choose your desired output format from the available options." },
+      { "@type": "HowToStep", name: "Convert and download", text: "Click Convert and download your converted file. Everything is processed in your browser." },
+    ],
+    tool: { "@type": "HowToTool", name: "Clowd Converter (web browser)" },
+    totalTime: "PT1M",
+  };
+
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -64,6 +79,7 @@ const Index = () => {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
       </Helmet>
       <Header />
       <main className="max-w-5xl mx-auto">
