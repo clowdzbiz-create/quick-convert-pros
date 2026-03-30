@@ -27,12 +27,58 @@ interface DailyStat {
 }
 
 const Analytics = () => {
+  const [authenticated, setAuthenticated] = useState(() => sessionStorage.getItem("admin_auth") === "true");
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
   const [conversions, setConversions] = useState<ConversionRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [formatPairs, setFormatPairs] = useState<FormatPairStat[]>([]);
   const [dailyStats, setDailyStats] = useState<DailyStat[]>([]);
   const [todayCount, setTodayCount] = useState(0);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem("admin_auth", "true");
+      setAuthenticated(true);
+      setAuthError("");
+    } else {
+      setAuthError("Incorrect password");
+    }
+  };
+
+  if (!authenticated) {
+    return (
+      <>
+        <Helmet>
+          <title>Admin Login — Clowd Converter</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <div className="min-h-screen bg-background flex flex-col">
+          <Header />
+          <main className="flex-1 flex items-center justify-center px-4">
+            <form onSubmit={handleLogin} className="bg-card border border-border rounded-xl p-8 w-full max-w-sm space-y-4">
+              <div className="flex items-center gap-2 justify-center mb-2">
+                <Lock className="w-5 h-5 text-primary" />
+                <h1 className="text-xl font-bold text-foreground">Admin Access</h1>
+              </div>
+              <Input
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11"
+              />
+              {authError && <p className="text-destructive text-sm text-center">{authError}</p>}
+              <Button type="submit" className="w-full h-11">Unlock</Button>
+            </form>
+          </main>
+          <Footer />
+        </div>
+      </>
+    );
+  }
 
   useEffect(() => {
     fetchData();
