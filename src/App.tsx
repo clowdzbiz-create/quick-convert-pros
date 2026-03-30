@@ -16,6 +16,7 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
+const Analytics = lazy(() => import("./pages/Analytics.tsx"));
 
 const queryClient = new QueryClient();
 
