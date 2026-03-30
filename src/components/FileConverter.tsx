@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Upload, Download, Loader2, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { convertFile } from "@/lib/converter";
+import { supabase } from "@/integrations/supabase/client";
 
 type MediaType = "video" | "audio" | "image";
 
@@ -84,6 +85,14 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
       setResultUrl(result);
       setProgress(100);
       setProgressLabel("Complete!");
+
+      // Track conversion event (fire-and-forget)
+      const sourceExt = file.name.split(".").pop()?.toUpperCase() || "UNKNOWN";
+      supabase.from("conversions").insert({
+        source_format: sourceExt,
+        target_format: selectedFormat.toUpperCase(),
+        file_size_bytes: file.size,
+      }).then(() => {});
     } catch (err: any) {
       setError(err.message || "Conversion failed. Please try a different file.");
     } finally {
