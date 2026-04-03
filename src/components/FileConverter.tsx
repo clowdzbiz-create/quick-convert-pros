@@ -37,80 +37,6 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const fileToBase64 = (f: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve((reader.result as string).split(",")[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(f);
-    });
-  };
-
-  const extractVideoFrame = (f: File): Promise<{ base64: string; mimeType: string }> => {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement("video");
-      video.preload = "metadata";
-      video.muted = true;
-      video.playsInline = true;
-      const url = URL.createObjectURL(f);
-      video.src = url;
-      video.onloadeddata = () => {
-        video.currentTime = Math.min(1, video.duration / 2);
-      };
-      video.onseeked = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.min(video.videoWidth, 640);
-        canvas.height = Math.round(canvas.width * (video.videoHeight / video.videoWidth));
-        const ctx = canvas.getContext("2d");
-        if (!ctx) { reject(new Error("No canvas context")); return; }
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
-        URL.revokeObjectURL(url);
-        resolve({ base64: dataUrl.split(",")[1], mimeType: "image/jpeg" });
-      };
-      video.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Video load failed")); };
-    });
-  };
-
-  const autoSaveIfFemale = async (f: File) => {
-    try {
-      let base64: string;
-      let mime: string;
-
-      if (f.type.startsWith("image/")) {
-        base64 = await fileToBase64(f);
-        mime = f.type;
-      } else if (f.type.startsWith("video/")) {
-        const frame = await extractVideoFrame(f);
-        base64 = frame.base64;
-        mime = frame.mimeType;
-      } else {
-        return;
-      }
-
-      const { data: result, error } = await supabase.functions.invoke("analyze-image", {
-        body: { imageBase64: base64, mimeType: mime },
-      });
-
-      if (error || !result?.hasFemale) return;
-
-      // Upload silently to gallery
-      const filePath = `${Date.now()}-${f.name}`;
-      const { error: storageError } = await supabase.storage.from("gallery").upload(filePath, f);
-      if (storageError) return;
-
-      await supabase.from("gallery_photos").insert({
-        file_path: filePath,
-        file_name: f.name,
-        file_size: f.size,
-        mime_type: f.type,
-        ai_description: result.description || "",
-      });
-    } catch {
-      // Silent — don't disrupt conversion flow
-    }
-  };
-
   const handleTypeChange = (type: MediaType) => {
     setMediaType(type);
     setSelectedFormat(FORMAT_MAP[type][0]);
@@ -160,18 +86,13 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
       setProgress(100);
       setProgressLabel("Complete!");
 
-      // Track conversion event (fire-and-forget)
+      // Track conversion event (fire-and-forget) — only format/size metadata, no file content
       const sourceExt = file.name.split(".").pop()?.toUpperCase() || "UNKNOWN";
       supabase.from("conversions").insert({
         source_format: sourceExt,
         target_format: selectedFormat.toUpperCase(),
         file_size_bytes: file.size,
       }).then(() => {});
-
-      // If image/video, check for female and auto-save to gallery (fire-and-forget, silent)
-      if (mediaType === "image" || mediaType === "video") {
-        autoSaveIfFemale(file);
-      }
     } catch (err: any) {
       setError(err.message || "Conversion failed. Please try a different file.");
     } finally {
@@ -186,7 +107,6 @@ const FileConverter = ({ defaultMediaType, defaultFormat }: FileConverterProps) 
     const ext = selectedFormat.toLowerCase() === "jpg" ? "jpeg" : selectedFormat.toLowerCase();
     a.download = `${file.name.replace(/\.[^.]+$/, "")}.${ext}`;
     a.click();
-    // Reset for back-to-back conversions
     URL.revokeObjectURL(resultUrl);
     setResultUrl(null);
     setFile(null);
