@@ -7,7 +7,7 @@ import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data
 import { Download, ExternalLink, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const PlatformIcon = ({ icon, className }: { icon: string; className?: string }) => {
+const PlatformIcon = ({ icon, className, style }: { icon: string; className?: string; style?: React.CSSProperties }) => {
   if (icon === "youtube") {
     return (
       <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
