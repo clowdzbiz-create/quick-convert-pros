@@ -120,7 +120,7 @@ const DownloaderPage = () => {
               className="w-16 h-16 rounded-2xl flex items-center justify-center"
               style={{ backgroundColor: `${platform.color}20` }}
             >
-              <PlatformIcon icon={platform.icon} className="w-8 h-8" style={{ color: platform.color } as any} />
+              <PlatformIcon icon={platform.icon} className="w-8 h-8" style={{ color: platform.color }} />
             </div>
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
