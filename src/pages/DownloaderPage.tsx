@@ -126,7 +126,7 @@ const DownloaderPage = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: `${platform.platform} Downloader — Clowd`,
+    name: `${platform.platform} Downloader — Quick Convert Pros`,
     url: `https://quickconvertpros.com/${platform.slug}`,
     description: platform.metaDescription,
     applicationCategory: "MultimediaApplication",
