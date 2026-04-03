@@ -19,6 +19,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel.tsx"));
+const DownloaderPage = lazy(() => import("./pages/DownloaderPage.tsx"));
 
 const queryClient = new QueryClient();
 
