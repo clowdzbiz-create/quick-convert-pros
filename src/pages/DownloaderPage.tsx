@@ -4,11 +4,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSlot from "@/components/AdSlot";
 import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data";
-import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2, Music, Video, Loader2 } from "lucide-react";
+import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 const PlatformIcon = ({ icon, className, style }: { icon: string; className?: string; style?: React.CSSProperties }) => {
   if (icon === "youtube") {
@@ -41,93 +40,31 @@ const URL_PATTERNS: Record<string, RegExp> = {
 const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<"auto" | "audio">("auto");
+  const [copied, setCopied] = useState(false);
 
-  const handleDownload = async () => {
+  const handleCopyAndGo = () => {
     const trimmed = url.trim();
-    if (!trimmed) {
-      setError("Please paste a URL first");
-      return;
-    }
+    if (!trimmed) { setError("Please paste a URL first"); return; }
     const pattern = URL_PATTERNS[platform.icon];
     if (pattern && !pattern.test(trimmed)) {
       setError(`That doesn't look like a valid ${platform.platform} URL`);
       return;
     }
     setError("");
-    setLoading(true);
-
-    try {
-      const { data, error: fnError } = await supabase.functions.invoke("cobalt-download", {
-        body: { url: trimmed, mode },
-      });
-
-      if (fnError) throw new Error(fnError.message);
-
-      if (data?.error) {
-        // If all instances failed, fall back to cobalt.tools redirect
-        if (data.fallback) {
-          window.open(`https://cobalt.tools/#${encodeURIComponent(trimmed)}`, "_blank", "noopener,noreferrer");
-          setLoading(false);
-          return;
-        }
-        throw new Error(data.error);
-      }
-
-      if (data?.url) {
-        // Trigger download by opening the tunnel/redirect URL
-        const link = document.createElement("a");
-        link.href = data.url;
-        link.download = data.filename || "download";
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (e) {
-      // Fallback to cobalt.tools redirect on any error
-      window.open(`https://cobalt.tools/#${encodeURIComponent(trimmed)}`, "_blank", "noopener,noreferrer");
-    } finally {
-      setLoading(false);
-    }
+    navigator.clipboard.writeText(trimmed).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 4000);
+    });
   };
 
   return (
-    <div className="max-w-lg mx-auto w-full space-y-3">
-      <div className="flex flex-wrap justify-center gap-2 mb-4">
+    <div className="max-w-lg mx-auto w-full space-y-4">
+      <div className="flex flex-wrap justify-center gap-2 mb-2">
         {platform.formats.map((f) => (
           <span key={f} className="px-3 py-1 bg-muted rounded-full text-xs font-medium text-foreground">
             {f}
           </span>
         ))}
-      </div>
-
-      {/* Mode toggle */}
-      <div className="flex justify-center gap-2 mb-2">
-        <button
-          onClick={() => setMode("auto")}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-            mode === "auto"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Video className="w-4 h-4" />
-          Video
-        </button>
-        <button
-          onClick={() => setMode("audio")}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-            mode === "audio"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Music className="w-4 h-4" />
-          Audio (MP3)
-        </button>
       </div>
 
       <div className="flex gap-2">
@@ -137,30 +74,39 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             type="url"
             placeholder={`Paste ${platform.platform} URL here...`}
             value={url}
-            onChange={(e) => { setUrl(e.target.value); setError(""); }}
-            onKeyDown={(e) => e.key === "Enter" && handleDownload()}
+            onChange={(e) => { setUrl(e.target.value); setError(""); setCopied(false); }}
             className="h-12 pl-10 text-base"
-            disabled={loading}
           />
         </div>
-        <Button
-          onClick={handleDownload}
-          size="lg"
-          className="h-12 px-6 font-bold gap-2 rounded-xl shrink-0"
-          disabled={loading}
-        >
-          {loading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Download className="w-5 h-5" />
-          )}
-          {loading ? "Processing..." : "Download"}
+        <Button onClick={handleCopyAndGo} size="lg" className="h-12 px-5 font-bold gap-2 rounded-xl shrink-0">
+          {copied ? <CheckCircle2 className="w-5 h-5" /> : <Download className="w-5 h-5" />}
+          {copied ? "Copied!" : "Copy URL"}
         </Button>
       </div>
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
-      <p className="text-xs text-muted-foreground text-center">
-        Powered by cobalt — free, open-source, no ads
-      </p>
+
+      {copied && (
+        <div className="text-center space-y-2 animate-fade-in">
+          <p className="text-sm text-foreground font-medium">✅ URL copied! Now click below to download:</p>
+          <a
+            href="https://cobalt.tools"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors"
+          >
+            <Download className="w-5 h-5" />
+            Open Downloader
+            <ExternalLink className="w-4 h-4 opacity-60" />
+          </a>
+          <p className="text-xs text-muted-foreground">Paste your URL on cobalt.tools and hit download</p>
+        </div>
+      )}
+
+      {!copied && (
+        <p className="text-xs text-muted-foreground text-center">
+          Paste your {platform.platform} link, copy it, then download via cobalt.tools — free & open-source
+        </p>
+      )}
     </div>
   );
 };
