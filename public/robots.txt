@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://clowdconverter.com/sitemap.xml
+Sitemap: https://quickconvertpros.com/sitemap.xml
 
 # Search engines
 User-agent: Googlebot
