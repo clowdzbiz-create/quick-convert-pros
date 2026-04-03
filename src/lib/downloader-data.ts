@@ -84,9 +84,9 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
     icon: "instagram",
     color: "hsl(330, 80%, 55%)",
     steps: [
-      "Open Instagram and copy the link to the Reel, Story, or post you want to save.",
-      "Click the download button below — it opens our trusted download partner.",
-      "Paste the Instagram URL and download your video or photo.",
+      "Paste the Instagram post, Reel, or Story link into the field on this page.",
+      "Click Copy URL to save it to your clipboard.",
+      "Open cobalt.tools in a new tab, paste the Instagram URL, and download your media.",
     ],
     features: [
       "Download Instagram Reels as MP4 video files",
