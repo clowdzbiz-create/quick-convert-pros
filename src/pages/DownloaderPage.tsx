@@ -4,8 +4,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSlot from "@/components/AdSlot";
 import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data";
-import { Download, ExternalLink, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const PlatformIcon = ({ icon, className, style }: { icon: string; className?: string; style?: React.CSSProperties }) => {
   if (icon === "youtube") {
