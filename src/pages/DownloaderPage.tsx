@@ -132,24 +132,8 @@ const DownloaderPage = () => {
             {platform.description}
           </p>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {platform.formats.map((f) => (
-              <span key={f} className="px-3 py-1 bg-muted rounded-full text-xs font-medium text-foreground">
-                {f}
-              </span>
-            ))}
-          </div>
-
-          <a href={platform.cobaltUrl} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="h-14 px-8 text-base font-bold gap-2 rounded-xl">
-              <Download className="w-5 h-5" />
-              Download {platform.platform} Video
-              <ExternalLink className="w-4 h-4 opacity-60" />
-            </Button>
-          </a>
-          <p className="text-xs text-muted-foreground mt-3">
-            Opens cobalt.tools — free, open-source, no ads
-          </p>
+          {/* URL Input + Download */}
+          <DownloadInput platform={platform} />
         </section>
 
         <AdSlot height="100px" label="Ad Space — Leaderboard" />
