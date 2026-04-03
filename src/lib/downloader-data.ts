@@ -138,9 +138,9 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
     icon: "tiktok",
     color: "hsl(180, 100%, 40%)",
     steps: [
-      "Open TikTok and tap 'Share' on the video, then tap 'Copy Link'.",
-      "Click the download button below — it opens our trusted download partner.",
-      "Paste the TikTok URL and download your video without the watermark.",
+      "Paste the TikTok video URL into the field on this page.",
+      "Click Copy URL to save it to your clipboard.",
+      "Open cobalt.tools in a new tab, paste the TikTok URL, and download your video.",
     ],
     features: [
       "Download TikTok videos without the watermark",
