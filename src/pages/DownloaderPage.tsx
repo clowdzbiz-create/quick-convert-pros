@@ -4,10 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSlot from "@/components/AdSlot";
 import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data";
-import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2 } from "lucide-react";
+import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2, Music, Video, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const PlatformIcon = ({ icon, className, style }: { icon: string; className?: string; style?: React.CSSProperties }) => {
   if (icon === "youtube") {
@@ -40,8 +41,10 @@ const URL_PATTERNS: Record<string, RegExp> = {
 const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"auto" | "audio">("auto");
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const trimmed = url.trim();
     if (!trimmed) {
       setError("Please paste a URL first");
@@ -53,8 +56,42 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       return;
     }
     setError("");
-    const encoded = encodeURIComponent(trimmed);
-    window.open(`https://cobalt.tools/#${encoded}`, "_blank", "noopener,noreferrer");
+    setLoading(true);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("cobalt-download", {
+        body: { url: trimmed, mode },
+      });
+
+      if (fnError) throw new Error(fnError.message);
+
+      if (data?.error) {
+        // If all instances failed, fall back to cobalt.tools redirect
+        if (data.fallback) {
+          window.open(`https://cobalt.tools/#${encodeURIComponent(trimmed)}`, "_blank", "noopener,noreferrer");
+          setLoading(false);
+          return;
+        }
+        throw new Error(data.error);
+      }
+
+      if (data?.url) {
+        // Trigger download by opening the tunnel/redirect URL
+        const link = document.createElement("a");
+        link.href = data.url;
+        link.download = data.filename || "download";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (e) {
+      // Fallback to cobalt.tools redirect on any error
+      window.open(`https://cobalt.tools/#${encodeURIComponent(trimmed)}`, "_blank", "noopener,noreferrer");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -66,6 +103,33 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           </span>
         ))}
       </div>
+
+      {/* Mode toggle */}
+      <div className="flex justify-center gap-2 mb-2">
+        <button
+          onClick={() => setMode("auto")}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            mode === "auto"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Video className="w-4 h-4" />
+          Video
+        </button>
+        <button
+          onClick={() => setMode("audio")}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            mode === "audio"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Music className="w-4 h-4" />
+          Audio (MP3)
+        </button>
+      </div>
+
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -76,16 +140,26 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             onChange={(e) => { setUrl(e.target.value); setError(""); }}
             onKeyDown={(e) => e.key === "Enter" && handleDownload()}
             className="h-12 pl-10 text-base"
+            disabled={loading}
           />
         </div>
-        <Button onClick={handleDownload} size="lg" className="h-12 px-6 font-bold gap-2 rounded-xl shrink-0">
-          <Download className="w-5 h-5" />
-          Download
+        <Button
+          onClick={handleDownload}
+          size="lg"
+          className="h-12 px-6 font-bold gap-2 rounded-xl shrink-0"
+          disabled={loading}
+        >
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Download className="w-5 h-5" />
+          )}
+          {loading ? "Processing..." : "Download"}
         </Button>
       </div>
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
       <p className="text-xs text-muted-foreground text-center">
-        Opens cobalt.tools with your link pre-filled — free, open-source, no ads
+        Powered by cobalt — free, open-source, no ads
       </p>
     </div>
   );
