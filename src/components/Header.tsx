@@ -18,6 +18,9 @@ const Header = () => {
           <Link to="/" className="text-primary hover:text-primary/80 transition-colors">
             Converter
           </Link>
+          <Link to="/youtube-downloader" className="text-muted-foreground hover:text-foreground transition-colors">
+            Downloaders
+          </Link>
           <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors">
             Blog
           </Link>
