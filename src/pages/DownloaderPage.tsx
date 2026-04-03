@@ -239,14 +239,8 @@ const DownloaderPage = () => {
           </div>
         </section>
 
-        <section className="text-center py-8 px-4">
-          <a href={platform.cobaltUrl} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="h-12 px-6 font-bold gap-2 rounded-xl">
-              <Download className="w-5 h-5" />
-              Open Downloader
-              <ExternalLink className="w-4 h-4 opacity-60" />
-            </Button>
-          </a>
+        <section className="max-w-3xl mx-auto py-8 px-4">
+          <DownloadInput platform={platform} />
         </section>
 
         <section className="max-w-3xl mx-auto px-4 py-6">
