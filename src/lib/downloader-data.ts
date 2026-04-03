@@ -30,9 +30,9 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
     icon: "youtube",
     color: "hsl(0, 100%, 50%)",
     steps: [
-      "Copy the YouTube video URL from your browser or the YouTube app.",
-      "Click the download button below — it opens our trusted download partner.",
-      "Paste the URL, choose MP3 or MP4, and download your file.",
+      "Paste the YouTube video URL into the field on this page.",
+      "Click Copy URL to save the link to your clipboard instantly.",
+      "Open cobalt.tools in a new tab, paste the link, choose MP3 or MP4, and download.",
     ],
     features: [
       "Download full YouTube videos in MP4 up to 4K quality",
