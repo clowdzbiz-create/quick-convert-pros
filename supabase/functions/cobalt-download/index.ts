@@ -60,13 +60,18 @@ serve(async (req) => {
           body: cobaltBody,
         });
 
+        // Auth required or forbidden — try next instance
+        if (resp.status === 401 || resp.status === 403) {
+          lastError = `Instance ${instance} requires authentication`;
+          continue;
+        }
+
         const data = await resp.json();
 
         if (data.status === "error") {
           lastError = data.error?.code || data.text || "Cobalt returned an error";
-          // If auth required, try next instance
-          if (resp.status === 401 || resp.status === 403) continue;
-          // Other errors, return them
+          // If it's an auth error message, try next instance
+          if (typeof lastError === "string" && lastError.includes("auth")) continue;
           return new Response(
             JSON.stringify({ error: lastError }),
             { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
