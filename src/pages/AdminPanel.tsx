@@ -76,7 +76,10 @@ const AdminPanel = () => {
     const photoRes = { data: result.photos };
 
     const convData = (convRes.data as ConversionRow[]) || [];
-    const visData = (visRes.data as VisitorRow[]) || [];
+    const botPattern = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|mediapartners|google|baidu|yandex/i;
+    const visData = ((visRes.data as (VisitorRow & { user_agent?: string })[]) || []).filter(
+      (v) => !v.user_agent || !botPattern.test(v.user_agent)
+    );
     const photoData = (photoRes.data as GalleryPhoto[]) || [];
 
     setConversions(convData);
