@@ -54,6 +54,12 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
+            <h4 className="font-semibold text-foreground text-sm mt-4 mb-2">Downloaders</h4>
+            <ul className="space-y-1.5">
+              <li><Link to="/youtube-downloader" className="text-xs text-muted-foreground hover:text-primary transition-colors">YouTube Downloader</Link></li>
+              <li><Link to="/instagram-downloader" className="text-xs text-muted-foreground hover:text-primary transition-colors">Instagram Downloader</Link></li>
+              <li><Link to="/tiktok-downloader" className="text-xs text-muted-foreground hover:text-primary transition-colors">TikTok Downloader</Link></li>
+            </ul>
             <h4 className="font-semibold text-foreground text-sm mt-4 mb-2">Resources</h4>
             <ul className="space-y-1.5">
               <li><Link to="/blog" className="text-xs text-muted-foreground hover:text-primary transition-colors">Blog & Guides</Link></li>
