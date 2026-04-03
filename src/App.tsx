@@ -7,6 +7,8 @@ import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
 import { lazy, Suspense } from "react";
 import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
+import { useParams } from "react-router-dom";
+import { getDownloaderBySlug } from "@/lib/downloader-data";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 import NotFound from "./pages/NotFound.tsx";
