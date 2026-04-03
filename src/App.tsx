@@ -43,6 +43,9 @@ const AppContent = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/youtube-downloader" element={<DownloaderPage />} />
+        <Route path="/instagram-downloader" element={<DownloaderPage />} />
+        <Route path="/tiktok-downloader" element={<DownloaderPage />} />
         <Route path="/:slug" element={<ConversionLanding />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
