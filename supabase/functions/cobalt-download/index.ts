@@ -6,11 +6,11 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// Cobalt API instances to try (official first, then community fallbacks)
+// Cobalt API instances to try
 const COBALT_INSTANCES = [
   "https://api.cobalt.tools",
   "https://cobalt-api.kwiatekmiki.com",
-  "https://cobalt.api.timelessnesses.me",
+  "https://cobalt.canine.tools",
 ];
 
 const URL_PATTERN = /^https?:\/\/(www\.)?(youtube\.com|youtu\.be|instagram\.com|tiktok\.com|vm\.tiktok\.com)\//i;
