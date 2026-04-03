@@ -30,9 +30,9 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
     icon: "youtube",
     color: "hsl(0, 100%, 50%)",
     steps: [
-      "Copy the YouTube video URL from your browser or the YouTube app.",
-      "Click the download button below — it opens our trusted download partner.",
-      "Paste the URL, choose MP3 or MP4, and download your file.",
+      "Paste the YouTube video URL into the field on this page.",
+      "Click Copy URL to save the link to your clipboard instantly.",
+      "Open cobalt.tools in a new tab, paste the link, choose MP3 or MP4, and download.",
     ],
     features: [
       "Download full YouTube videos in MP4 up to 4K quality",
@@ -84,9 +84,9 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
     icon: "instagram",
     color: "hsl(330, 80%, 55%)",
     steps: [
-      "Open Instagram and copy the link to the Reel, Story, or post you want to save.",
-      "Click the download button below — it opens our trusted download partner.",
-      "Paste the Instagram URL and download your video or photo.",
+      "Paste the Instagram post, Reel, or Story link into the field on this page.",
+      "Click Copy URL to save it to your clipboard.",
+      "Open cobalt.tools in a new tab, paste the Instagram URL, and download your media.",
     ],
     features: [
       "Download Instagram Reels as MP4 video files",
@@ -138,9 +138,9 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
     icon: "tiktok",
     color: "hsl(180, 100%, 40%)",
     steps: [
-      "Open TikTok and tap 'Share' on the video, then tap 'Copy Link'.",
-      "Click the download button below — it opens our trusted download partner.",
-      "Paste the TikTok URL and download your video without the watermark.",
+      "Paste the TikTok video URL into the field on this page.",
+      "Click Copy URL to save it to your clipboard.",
+      "Open cobalt.tools in a new tab, paste the TikTok URL, and download your video.",
     ],
     features: [
       "Download TikTok videos without the watermark",

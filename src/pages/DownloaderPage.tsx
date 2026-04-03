@@ -87,7 +87,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
 
       {copied && (
         <div className="text-center space-y-2 animate-fade-in">
-          <p className="text-sm text-foreground font-medium">✅ URL copied! Now click below to download:</p>
+          <p className="text-sm text-foreground font-medium">✅ URL copied! Now open the downloader in a new tab:</p>
           <a
             href="https://cobalt.tools"
             target="_blank"
@@ -95,10 +95,10 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors"
           >
             <Download className="w-5 h-5" />
-            Open Downloader
+            Open cobalt.tools
             <ExternalLink className="w-4 h-4 opacity-60" />
           </a>
-          <p className="text-xs text-muted-foreground">Paste your URL on cobalt.tools and hit download</p>
+          <p className="text-xs text-muted-foreground">Paste your copied URL there and start the download</p>
         </div>
       )}
 
