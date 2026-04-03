@@ -4,8 +4,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSlot from "@/components/AdSlot";
 import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data";
-import { Download, ExternalLink, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const PlatformIcon = ({ icon, className, style }: { icon: string; className?: string; style?: React.CSSProperties }) => {
   if (icon === "youtube") {
@@ -26,6 +28,66 @@ const PlatformIcon = ({ icon, className, style }: { icon: string; className?: st
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
       <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
     </svg>
+  );
+};
+
+const URL_PATTERNS: Record<string, RegExp> = {
+  youtube: /^https?:\/\/(www\.)?(youtube\.com\/(watch|shorts|live)|youtu\.be\/)/i,
+  instagram: /^https?:\/\/(www\.)?instagram\.com\/(p|reel|stories|tv)\//i,
+  tiktok: /^https?:\/\/(www\.|vm\.)?tiktok\.com\//i,
+};
+
+const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
+  const [url, setUrl] = useState("");
+  const [error, setError] = useState("");
+
+  const handleDownload = () => {
+    const trimmed = url.trim();
+    if (!trimmed) {
+      setError("Please paste a URL first");
+      return;
+    }
+    const pattern = URL_PATTERNS[platform.icon];
+    if (pattern && !pattern.test(trimmed)) {
+      setError(`That doesn't look like a valid ${platform.platform} URL`);
+      return;
+    }
+    setError("");
+    const encoded = encodeURIComponent(trimmed);
+    window.open(`https://cobalt.tools/#${encoded}`, "_blank", "noopener,noreferrer");
+  };
+
+  return (
+    <div className="max-w-lg mx-auto w-full space-y-3">
+      <div className="flex flex-wrap justify-center gap-2 mb-4">
+        {platform.formats.map((f) => (
+          <span key={f} className="px-3 py-1 bg-muted rounded-full text-xs font-medium text-foreground">
+            {f}
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="url"
+            placeholder={`Paste ${platform.platform} URL here...`}
+            value={url}
+            onChange={(e) => { setUrl(e.target.value); setError(""); }}
+            onKeyDown={(e) => e.key === "Enter" && handleDownload()}
+            className="h-12 pl-10 text-base"
+          />
+        </div>
+        <Button onClick={handleDownload} size="lg" className="h-12 px-6 font-bold gap-2 rounded-xl shrink-0">
+          <Download className="w-5 h-5" />
+          Download
+        </Button>
+      </div>
+      {error && <p className="text-destructive text-sm text-center">{error}</p>}
+      <p className="text-xs text-muted-foreground text-center">
+        Opens cobalt.tools with your link pre-filled — free, open-source, no ads
+      </p>
+    </div>
   );
 };
 
@@ -130,24 +192,8 @@ const DownloaderPage = () => {
             {platform.description}
           </p>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {platform.formats.map((f) => (
-              <span key={f} className="px-3 py-1 bg-muted rounded-full text-xs font-medium text-foreground">
-                {f}
-              </span>
-            ))}
-          </div>
-
-          <a href={platform.cobaltUrl} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="h-14 px-8 text-base font-bold gap-2 rounded-xl">
-              <Download className="w-5 h-5" />
-              Download {platform.platform} Video
-              <ExternalLink className="w-4 h-4 opacity-60" />
-            </Button>
-          </a>
-          <p className="text-xs text-muted-foreground mt-3">
-            Opens cobalt.tools — free, open-source, no ads
-          </p>
+          {/* URL Input + Download */}
+          <DownloadInput platform={platform} />
         </section>
 
         <AdSlot height="100px" label="Ad Space — Leaderboard" />
@@ -193,14 +239,8 @@ const DownloaderPage = () => {
           </div>
         </section>
 
-        <section className="text-center py-8 px-4">
-          <a href={platform.cobaltUrl} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="h-12 px-6 font-bold gap-2 rounded-xl">
-              <Download className="w-5 h-5" />
-              Open Downloader
-              <ExternalLink className="w-4 h-4 opacity-60" />
-            </Button>
-          </a>
+        <section className="max-w-3xl mx-auto py-8 px-4">
+          <DownloadInput platform={platform} />
         </section>
 
         <section className="max-w-3xl mx-auto px-4 py-6">
