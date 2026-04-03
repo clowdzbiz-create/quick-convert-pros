@@ -3,8 +3,12 @@ import { supabase } from "@/integrations/supabase/client";
 
 const generateId = () => Math.random().toString(36).substring(2) + Date.now().toString(36);
 
+const isBot = () => /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|mediapartners|google|baidu|yandex/i.test(navigator.userAgent);
+
 export const useVisitorTracking = () => {
   useEffect(() => {
+    if (isBot()) return;
+
     // Get or create persistent visitor ID
     let visitorId = localStorage.getItem("clowd_visitor_id");
     if (!visitorId) {
