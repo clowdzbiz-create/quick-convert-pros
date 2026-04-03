@@ -23,8 +23,8 @@ const ConversionLanding = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: `${route.h1} Online Free — Clowd Converter`,
-    url: `https://clowdconverter.com/${route.slug}`,
+    name: `${route.h1} Online Free — Quick Convert Pros`,
+    url: `https://quickconvertpros.com/${route.slug}`,
     description: route.metaDescription,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Any",
@@ -59,15 +59,15 @@ const ConversionLanding = () => {
       name: step,
       text: step,
     })),
-    tool: { "@type": "HowToTool", name: "Clowd Converter (web browser)" },
+    tool: { "@type": "HowToTool", name: "Quick Convert Pros (web browser)" },
   };
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
-      { "@type": "ListItem", position: 2, name: route.h1, item: `https://clowdconverter.com/${route.slug}` },
+      { "@type": "ListItem", position: 1, name: "Quick Convert Pros", item: "https://quickconvertpros.com" },
+      { "@type": "ListItem", position: 2, name: route.h1, item: `https://quickconvertpros.com/${route.slug}` },
     ],
   };
 
@@ -86,10 +86,10 @@ const ConversionLanding = () => {
       <Helmet>
         <title>{route.title}</title>
         <meta name="description" content={route.metaDescription} />
-        <link rel="canonical" href={`https://clowdconverter.com/${route.slug}`} />
+        <link rel="canonical" href={`https://quickconvertpros.com/${route.slug}`} />
         <meta property="og:title" content={route.title} />
         <meta property="og:description" content={route.metaDescription} />
-        <meta property="og:url" content={`https://clowdconverter.com/${route.slug}`} />
+        <meta property="og:url" content={`https://quickconvertpros.com/${route.slug}`} />
         <meta property="og:type" content="website" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         {faqJsonLd && <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>}
@@ -142,13 +142,13 @@ const ConversionLanding = () => {
           </h2>
           <div className="text-sm text-muted-foreground space-y-3 leading-relaxed">
             <p>
-              Converting {route.from} to {route.to} is one of the most common file conversion tasks. With Clowd Converter, you can {route.h1.toLowerCase()} instantly without installing any software or creating an account.
+              Converting {route.from} to {route.to} is one of the most common file conversion tasks. With Quick Convert Pros, you can {route.h1.toLowerCase()} instantly without installing any software or creating an account.
             </p>
             <p>
               Our {route.mediaType} converter uses {route.mediaType === "image" ? "the HTML5 Canvas API" : "FFmpeg WebAssembly"} to process your files directly in your browser. This means your {route.from} files never leave your device — ensuring complete privacy and security.
             </p>
             <p>
-              Whether you're on a phone, tablet, or computer, Clowd Converter works on any device with a modern web browser. No downloads, no plugins, no hassle.
+              Whether you're on a phone, tablet, or computer, Quick Convert Pros works on any device with a modern web browser. No downloads, no plugins, no hassle.
             </p>
           </div>
         </section>

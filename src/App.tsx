@@ -54,7 +54,6 @@ const AppContent = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/:slug" element={<ConversionOrDownloaderPage />} />
-        <Route path="/:slug" element={<ConversionLanding />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h4 className="font-bold text-foreground mb-3">Clowd Converter</h4>
+            <h4 className="font-bold text-foreground mb-3">Quick Convert Pros</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Free browser-based file converter. No uploads, no sign-up. Your files never leave your device.
             </p>
@@ -72,7 +72,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border pt-6 text-center text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} Clowd Marketing • Free file conversion • No tracking • Files processed locally</p>
+          <p>© {new Date().getFullYear()} Quick Convert Pros • Free file conversion • No tracking • Files processed locally</p>
         </div>
       </div>
     </footer>

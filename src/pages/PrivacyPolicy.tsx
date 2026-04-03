@@ -5,9 +5,9 @@ import Footer from "@/components/Footer";
 const PrivacyPolicy = () => (
   <>
     <Helmet>
-      <title>Privacy Policy — Clowd Converter</title>
-      <meta name="description" content="Privacy Policy for Clowd Converter. Learn how we handle your data — spoiler: your files never leave your browser." />
-      <link rel="canonical" href="https://clowdconverter.com/privacy-policy" />
+      <title>Privacy Policy — Quick Convert Pros</title>
+      <meta name="description" content="Privacy Policy for Quick Convert Pros. Learn how we handle your data — spoiler: your files never leave your browser." />
+      <link rel="canonical" href="https://quickconvertpros.com/privacy-policy" />
     </Helmet>
     <Header />
     <main className="max-w-3xl mx-auto px-4 py-12 min-h-screen">
@@ -17,7 +17,7 @@ const PrivacyPolicy = () => (
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-6 text-foreground/90">
         <section>
           <h2 className="text-xl font-semibold text-foreground">1. Introduction</h2>
-          <p>Clowd Converter ("we", "us", "our") is operated by Clowd Marketing. This Privacy Policy explains how we collect, use, and protect information when you use our website at clowdconverter.com (the "Service").</p>
+          <p>Quick Convert Pros ("we", "us", "our") is operated by Quick Convert Pros. This Privacy Policy explains how we collect, use, and protect information when you use our website at quickconvertpros.com (the "Service").</p>
         </section>
 
         <section>
@@ -62,7 +62,7 @@ const PrivacyPolicy = () => (
 
         <section>
           <h2 className="text-xl font-semibold text-foreground">9. Contact Us</h2>
-          <p>If you have questions about this Privacy Policy, please contact us at <a href="mailto:support@clowdconverter.com" className="text-primary hover:underline">support@clowdconverter.com</a>.</p>
+          <p>If you have questions about this Privacy Policy, please contact us at <a href="mailto:support@quickconvertpros.com" className="text-primary hover:underline">support@quickconvertpros.com</a>.</p>
         </section>
       </div>
     </main>
