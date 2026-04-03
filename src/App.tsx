@@ -25,6 +25,14 @@ const DownloaderPage = lazy(() => import("./pages/DownloaderPage.tsx"));
 
 const queryClient = new QueryClient();
 
+const ConversionOrDownloaderPage = () => {
+  const { slug } = useParams<{ slug: string }>();
+  if (slug && getDownloaderBySlug(slug)) {
+    return <DownloaderPage />;
+  }
+  return <ConversionLanding />;
+};
+
 const Loading = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
