@@ -31,6 +31,66 @@ const PlatformIcon = ({ icon, className, style }: { icon: string; className?: st
   );
 };
 
+const URL_PATTERNS: Record<string, RegExp> = {
+  youtube: /^https?:\/\/(www\.)?(youtube\.com\/(watch|shorts|live)|youtu\.be\/)/i,
+  instagram: /^https?:\/\/(www\.)?instagram\.com\/(p|reel|stories|tv)\//i,
+  tiktok: /^https?:\/\/(www\.|vm\.)?tiktok\.com\//i,
+};
+
+const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
+  const [url, setUrl] = useState("");
+  const [error, setError] = useState("");
+
+  const handleDownload = () => {
+    const trimmed = url.trim();
+    if (!trimmed) {
+      setError("Please paste a URL first");
+      return;
+    }
+    const pattern = URL_PATTERNS[platform.icon];
+    if (pattern && !pattern.test(trimmed)) {
+      setError(`That doesn't look like a valid ${platform.platform} URL`);
+      return;
+    }
+    setError("");
+    const encoded = encodeURIComponent(trimmed);
+    window.open(`https://cobalt.tools/#${encoded}`, "_blank", "noopener,noreferrer");
+  };
+
+  return (
+    <div className="max-w-lg mx-auto w-full space-y-3">
+      <div className="flex flex-wrap justify-center gap-2 mb-4">
+        {platform.formats.map((f) => (
+          <span key={f} className="px-3 py-1 bg-muted rounded-full text-xs font-medium text-foreground">
+            {f}
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="url"
+            placeholder={`Paste ${platform.platform} URL here...`}
+            value={url}
+            onChange={(e) => { setUrl(e.target.value); setError(""); }}
+            onKeyDown={(e) => e.key === "Enter" && handleDownload()}
+            className="h-12 pl-10 text-base"
+          />
+        </div>
+        <Button onClick={handleDownload} size="lg" className="h-12 px-6 font-bold gap-2 rounded-xl shrink-0">
+          <Download className="w-5 h-5" />
+          Download
+        </Button>
+      </div>
+      {error && <p className="text-destructive text-sm text-center">{error}</p>}
+      <p className="text-xs text-muted-foreground text-center">
+        Opens cobalt.tools with your link pre-filled — free, open-source, no ads
+      </p>
+    </div>
+  );
+};
+
 const DownloaderPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const platform = slug ? getDownloaderBySlug(slug) : undefined;
