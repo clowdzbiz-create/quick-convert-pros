@@ -8,7 +8,7 @@ const SEOContentSection = () => {
       </h2>
       <div className="prose prose-sm text-muted-foreground max-w-none space-y-4">
         <p>
-          <strong className="text-foreground">Clowd Converter</strong> is a free, browser-based file conversion tool that lets you convert video, audio, and image files without uploading anything to a server. Unlike traditional online converters, your files are processed entirely on your device using cutting-edge WebAssembly technology.
+          <strong className="text-foreground">Quick Convert Pros</strong> is a free, browser-based file conversion tool that lets you convert video, audio, and image files without uploading anything to a server. Unlike traditional online converters, your files are processed entirely on your device using cutting-edge WebAssembly technology.
         </p>
         
         <h3 className="text-foreground text-lg font-semibold mt-6 mb-2">Video Conversion</h3>
@@ -46,7 +46,7 @@ const SEOContentSection = () => {
 
         <h3 className="text-foreground text-lg font-semibold mt-6 mb-2">How It Works</h3>
         <p>
-          Clowd Converter uses <strong className="text-foreground">FFmpeg compiled to WebAssembly</strong> for video and audio conversion, and the <strong className="text-foreground">HTML5 Canvas API</strong> for image conversion. This means your files are processed using your device's own processing power — nothing is uploaded to any server.
+          Quick Convert Pros uses <strong className="text-foreground">FFmpeg compiled to WebAssembly</strong> for video and audio conversion, and the <strong className="text-foreground">HTML5 Canvas API</strong> for image conversion. This means your files are processed using your device's own processing power — nothing is uploaded to any server.
         </p>
         <p>
           This approach is faster than server-based converters, completely private, and works even offline once the page has loaded. Read more in our{" "}

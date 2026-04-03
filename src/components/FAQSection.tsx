@@ -8,19 +8,19 @@ import {
 
 const faqs = [
   {
-    q: "How do I convert files with Clowd Converter?",
+    q: "How do I convert files with Quick Convert Pros?",
     a: "Simply upload your file, select the target format, and click Convert. Your file will be processed instantly in your browser and ready to download.",
   },
   {
-    q: "Is Clowd Converter really free?",
-    a: "Yes, Clowd Converter is completely free. No sign-up, no hidden fees. Convert as many files as you want.",
+    q: "Is Quick Convert Pros really free?",
+    a: "Yes, Quick Convert Pros is completely free. No sign-up, no hidden fees. Convert as many files as you want.",
   },
   {
-    q: "What file formats does Clowd Converter support?",
+    q: "What file formats does Quick Convert Pros support?",
     a: "We support video (MP4, WebM, MOV, AVI, MKV, FLV), audio (MP3, WAV, OGG, AAC, FLAC, M4A), and image (JPG, PNG, WebP, GIF, BMP) formats.",
   },
   {
-    q: "Is my file secure with Clowd Converter?",
+    q: "Is my file secure with Quick Convert Pros?",
     a: "Yes. Files are processed entirely in your browser — they never leave your device. Nothing is uploaded to any server.",
   },
   {
@@ -28,12 +28,12 @@ const faqs = [
     a: "You can convert files up to 500MB in size. For larger files, consider splitting them or using desktop software.",
   },
   {
-    q: "Does Clowd Converter work on mobile?",
-    a: "Yes! Clowd Converter works on any device with a modern browser — phones, tablets, and desktops. No app download needed.",
+    q: "Does Quick Convert Pros work on mobile?",
+    a: "Yes! Quick Convert Pros works on any device with a modern browser — phones, tablets, and desktops. No app download needed.",
   },
   {
     q: "Do I need to create an account?",
-    a: "No. Clowd Converter requires no sign-up, no email, and no personal information. Just visit the site and start converting.",
+    a: "No. Quick Convert Pros requires no sign-up, no email, and no personal information. Just visit the site and start converting.",
   },
 ];
 

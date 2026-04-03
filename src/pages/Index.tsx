@@ -16,8 +16,8 @@ const Index = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Clowd Converter",
-    url: "https://clowdconverter.com",
+    name: "Quick Convert Pros",
+    url: "https://quickconvertpros.com",
     description: "Convert videos, audio, and images instantly for free. Browser-based, no upload needed. Fast, private, and secure.",
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Any",
@@ -48,23 +48,23 @@ const Index = () => {
     "@context": "https://schema.org",
     "@type": "HowTo",
     name: "How to Convert Files Online for Free",
-    description: "Convert video, audio, or image files instantly using Clowd Converter. No upload, no sign-up required.",
+    description: "Convert video, audio, or image files instantly using Quick Convert Pros. No upload, no sign-up required.",
     step: [
       { "@type": "HowToStep", name: "Choose media type", text: "Select whether you want to convert a video, audio, or image file." },
       { "@type": "HowToStep", name: "Upload your file", text: "Drag and drop your file or click to browse. Files up to 500MB are supported." },
       { "@type": "HowToStep", name: "Select output format", text: "Choose your desired output format from the available options." },
       { "@type": "HowToStep", name: "Convert and download", text: "Click Convert and download your converted file. Everything is processed in your browser." },
     ],
-    tool: { "@type": "HowToTool", name: "Clowd Converter (web browser)" },
+    tool: { "@type": "HowToTool", name: "Quick Convert Pros (web browser)" },
     totalTime: "PT1M",
   };
 
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Clowd Marketing",
-    url: "https://clowdconverter.com",
-    logo: "https://clowdconverter.com/favicon.png",
+    name: "Quick Convert Pros",
+    url: "https://quickconvertpros.com",
+    logo: "https://quickconvertpros.com/favicon.png",
     sameAs: [],
   };
 
@@ -72,14 +72,14 @@ const Index = () => {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
+      { "@type": "ListItem", position: 1, name: "Quick Convert Pros", item: "https://quickconvertpros.com" },
     ],
   };
 
   const softwareJsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Clowd Converter",
+    name: "Quick Convert Pros",
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web Browser",
     offers: {
@@ -98,10 +98,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Free Online File Converter — Video, Audio & Image | Clowd Converter</title>
+        <title>Free Online File Converter — Video, Audio & Image | Quick Convert Pros</title>
         <meta name="description" content="Convert MP4, MP3, WAV, PNG, JPG, WebP and 15+ formats instantly for free. No sign-up, no uploads — files are processed in your browser. Fast, secure, and private." />
-        <link rel="canonical" href="https://clowdconverter.com" />
-        <meta property="og:title" content="Free Online File Converter — Video, Audio & Image | Clowd Converter" />
+        <link rel="canonical" href="https://quickconvertpros.com" />
+        <meta property="og:title" content="Free Online File Converter — Video, Audio & Image | Quick Convert Pros" />
         <meta property="og:description" content="Convert videos, audio, and images instantly. Free, fast, and secure — right in your browser." />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>

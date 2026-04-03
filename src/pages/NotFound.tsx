@@ -16,7 +16,7 @@ const NotFound = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Page Not Found — Clowd Converter</title>
+        <title>Page Not Found — Quick Convert Pros</title>
         <meta name="robots" content="noindex" />
       </Helmet>
       <Header />
