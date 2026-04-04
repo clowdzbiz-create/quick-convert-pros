@@ -7,6 +7,7 @@ const corsHeaders = {
 
 const COBALT_API = "https://sulphurously-exequial-taunya.ngrok-free.dev";
 const COBALT_HOST = "sulphurously-exequial-taunya.ngrok-free.dev";
+const FUNCTION_PATH = "/functions/v1/cobalt-proxy";
 
 const jsonResponse = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -23,13 +24,13 @@ const isAllowedTunnelUrl = (value: string) => {
   }
 };
 
-const buildProxyUrl = (req: Request, target: string) => {
+const buildProxyUrl = (target: string) => {
   if (!isAllowedTunnelUrl(target)) {
     return target;
   }
 
-  const proxyUrl = new URL(req.url);
-  proxyUrl.search = "";
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+  const proxyUrl = new URL(`${supabaseUrl}${FUNCTION_PATH}`);
   proxyUrl.searchParams.set("download", target);
   return proxyUrl.toString();
 };
