@@ -51,7 +51,10 @@ serve(async (req) => {
     try {
       const upstream = await fetch(downloadTarget, {
         method: "GET",
-        headers: { Accept: "*/*" },
+        headers: {
+          Accept: "*/*",
+          "ngrok-skip-browser-warning": "true",
+        },
       });
 
       if (!upstream.ok || !upstream.body) {
@@ -114,6 +117,7 @@ serve(async (req) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
       },
       body: JSON.stringify(cobaltBody),
     });
