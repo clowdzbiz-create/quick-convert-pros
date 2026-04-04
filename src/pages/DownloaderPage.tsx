@@ -37,7 +37,7 @@ const URL_PATTERNS: Record<string, RegExp> = {
   tiktok: /^https?:\/\/(www\.|vm\.)?tiktok\.com\//i,
 };
 
-const COBALT_API = "https://sulphurously-exequial-taunya.ngrok-free.dev";
+const COBALT_API = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cobalt-proxy`;
 
 const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
   const [url, setUrl] = useState("");
