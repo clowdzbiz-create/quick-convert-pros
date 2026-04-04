@@ -91,11 +91,11 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         return;
       }
 
-      if (data.status === "stream" || data.status === "redirect" || data.status === "tunnel") {
+      if (data.status === "picker" && Array.isArray(data.picker)) {
+        setPickerItems(data.picker);
+      } else if (data.url) {
         setDownloadUrl(data.url);
         setDownloadFilename(data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4"));
-      } else if (data.status === "picker" && Array.isArray(data.picker)) {
-        setPickerItems(data.picker);
       } else {
         setError("Unexpected response from the download API.");
       }
