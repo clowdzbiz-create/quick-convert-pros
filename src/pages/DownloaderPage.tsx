@@ -106,7 +106,18 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         return;
       }
 
+      if (data.status === "tunnel" && typeof data.url === "string") {
+        const finalUrl = data.url;
+        const fname = data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
+        console.log("Final Download Link:", finalUrl);
+        console.log("Filename:", fname);
+        setDownloadUrl(finalUrl);
+        setDownloadFilename(fname);
+        return;
+      }
+
       if (typeof data.url === "string" && data.url.length > 0) {
+        console.log("Final Download Link:", data.url);
         setDownloadUrl(data.url);
         setDownloadFilename(data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4"));
         return;
@@ -211,7 +222,9 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
           <a
             href={downloadUrl}
-            target={downloadFrameName}
+            download={downloadFilename}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg"
           >
             <Download className="w-6 h-6" />
