@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSlot from "@/components/AdSlot";
 import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data";
-import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2 } from "lucide-react";
+import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2, Video, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -43,7 +43,8 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState("");
+  const [downloadMode, setDownloadMode] = useState<"video" | "audio">("video");
+  const [quality, setQuality] = useState("720");
 
   const handleDownload = async () => {
     const trimmed = url.trim();
@@ -54,7 +55,6 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       return;
     }
     setError("");
-    setDownloadUrl("");
     setLoading(true);
 
     try {
@@ -66,20 +66,38 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         },
         body: JSON.stringify({
           url: trimmed,
-          videoQuality: "720",
+          videoQuality: quality,
           filenameStyle: "classic",
+          downloadMode,
         }),
       });
 
-      if (!res.ok) throw new Error(`API returned ${res.status}`);
-      const data = await res.json();
+      const contentType = res.headers.get("Content-Type") || "";
 
-      if (data.status === "error") {
-        setError(data.text || "The API couldn't process this link.");
-      } else if (data.url) {
-        setDownloadUrl(data.url);
+      // If the response is a file stream (proxied tunnel/redirect)
+      if (!contentType.includes("application/json")) {
+        const blob = await res.blob();
+        const disposition = res.headers.get("Content-Disposition") || "";
+        const filenameMatch = disposition.match(/filename="?([^"]+)"?/);
+        const filename = filenameMatch?.[1] || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
       } else {
-        setError("Unexpected response from the download API.");
+        const data = await res.json();
+        if (data.status === "error") {
+          setError(data.text || "The API couldn't process this link.");
+        } else if (data.url) {
+          // Fallback: open direct URL
+          window.open(data.url, "_blank");
+        } else {
+          setError("Unexpected response from the download API.");
+        }
       }
     } catch (e: any) {
       setError(e.message?.includes("fetch") || e.message?.includes("network")
@@ -92,13 +110,48 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
 
   return (
     <div className="max-w-lg mx-auto w-full space-y-4">
-      <div className="flex flex-wrap justify-center gap-2 mb-2">
-        {platform.formats.map((f) => (
-          <span key={f} className="px-3 py-1 bg-muted rounded-full text-xs font-medium text-foreground">
-            {f}
-          </span>
-        ))}
+      {/* Format toggle */}
+      <div className="flex justify-center gap-2">
+        <button
+          onClick={() => setDownloadMode("video")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            downloadMode === "video"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Video className="w-4 h-4" /> Video
+        </button>
+        <button
+          onClick={() => setDownloadMode("audio")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            downloadMode === "audio"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Music className="w-4 h-4" /> Audio (MP3)
+        </button>
       </div>
+
+      {/* Quality selector for video */}
+      {downloadMode === "video" && (
+        <div className="flex justify-center gap-2">
+          {["360", "720", "1080"].map((q) => (
+            <button
+              key={q}
+              onClick={() => setQuality(q)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                quality === q
+                  ? "bg-primary/20 text-primary border border-primary/40"
+                  : "bg-muted text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {q}p
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-2">
         <div className="relative flex-1">
@@ -107,7 +160,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             type="url"
             placeholder={`Paste ${platform.platform} URL here...`}
             value={url}
-            onChange={(e) => { setUrl(e.target.value); setError(""); setDownloadUrl(""); }}
+            onChange={(e) => { setUrl(e.target.value); setError(""); }}
             className="h-12 pl-10 text-base"
           />
         </div>
@@ -126,23 +179,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       </div>
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
 
-      {downloadUrl && (
-        <div className="text-center space-y-2 animate-fade-in">
-          <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
-          <a
-            href={downloadUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors"
-          >
-            <Download className="w-5 h-5" />
-            Download Now
-            <ExternalLink className="w-4 h-4 opacity-60" />
-          </a>
-        </div>
-      )}
-
-      {!downloadUrl && !loading && (
+      {!loading && (
         <p className="text-xs text-muted-foreground text-center">
           Paste your {platform.platform} link and hit Download — fast, free & private
         </p>
