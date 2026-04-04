@@ -126,8 +126,8 @@ const DownloaderPage = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: `${platform.platform} Downloader — Quick Convert Pros`,
-    url: `https://quickconvertpros.com/${platform.slug}`,
+    name: `${platform.platform} Downloader — Clowd Converter`,
+    url: `https://clowdconverter.com/${platform.slug}`,
     description: platform.metaDescription,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Any",
@@ -164,8 +164,8 @@ const DownloaderPage = () => {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Quick Convert Pros", item: "https://quickconvertpros.com" },
-      { "@type": "ListItem", position: 2, name: `${platform.platform} Downloader`, item: `https://quickconvertpros.com/${platform.slug}` },
+      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
+      { "@type": "ListItem", position: 2, name: `${platform.platform} Downloader`, item: `https://clowdconverter.com/${platform.slug}` },
     ],
   };
 
@@ -176,10 +176,10 @@ const DownloaderPage = () => {
       <Helmet>
         <title>{platform.title}</title>
         <meta name="description" content={platform.metaDescription} />
-        <link rel="canonical" href={`https://quickconvertpros.com/${platform.slug}`} />
+        <link rel="canonical" href={`https://clowdconverter.com/${platform.slug}`} />
         <meta property="og:title" content={platform.title} />
         <meta property="og:description" content={platform.metaDescription} />
-        <meta property="og:url" content={`https://quickconvertpros.com/${platform.slug}`} />
+        <meta property="og:url" content={`https://clowdconverter.com/${platform.slug}`} />
         <meta property="og:type" content="website" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>

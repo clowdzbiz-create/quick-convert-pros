@@ -20,28 +20,28 @@ const BlogIndex = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "Quick Convert Pros Blog",
-    url: "https://quickconvertpros.com/blog",
+    name: "Clowd Converter Blog",
+    url: "https://clowdconverter.com/blog",
     description: "Guides, tips, and tutorials on file conversion — video, audio, and images.",
     publisher: {
       "@type": "Organization",
-      name: "Quick Convert Pros",
+      name: "Clowd Converter",
     },
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Blog — Quick Convert Pros | File Conversion Guides & Tips</title>
+        <title>Blog — Clowd Converter | File Conversion Guides & Tips</title>
         <meta name="description" content="Guides, tips, and tutorials on converting video, audio, and image files. Learn the best formats and methods for every use case." />
-        <link rel="canonical" href="https://quickconvertpros.com/blog" />
+        <link rel="canonical" href="https://clowdconverter.com/blog" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
       <Header />
       <main className="max-w-5xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold text-foreground mb-3">The Quick Convert Pros Blog</h1>
+          <h1 className="text-4xl font-extrabold text-foreground mb-3">The Clowd Converter Blog</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Expert guides, format comparisons, and tutorials to help you convert files smarter.
           </p>

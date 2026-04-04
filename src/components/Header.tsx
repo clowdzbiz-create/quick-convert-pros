@@ -23,7 +23,7 @@ const Header = () => {
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
             <Cloud className="w-5 h-5 text-primary" />
           </div>
-          <span className="font-bold text-lg">Quick Convert Pros</span>
+          <span className="font-bold text-lg">Clowd Converter</span>
         </Link>
         <div className="flex items-center gap-4 text-sm font-medium">
           <Link to="/" className="text-primary hover:text-primary/80 transition-colors">

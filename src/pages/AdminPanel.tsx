@@ -172,7 +172,7 @@ const AdminPanel = () => {
     return (
       <>
         <Helmet>
-          <title>Admin — Quick Convert Pros</title>
+          <title>Admin — Clowd Converter</title>
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
         <div className="min-h-screen bg-background flex flex-col">
@@ -205,7 +205,7 @@ const AdminPanel = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Panel — Quick Convert Pros</title>
+        <title>Admin Panel — Clowd Converter</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 

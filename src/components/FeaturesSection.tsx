@@ -9,7 +9,7 @@ const features = [
   {
     icon: Shield,
     title: "100% Private & Secure",
-    description: "Your files never leave your device. Unlike other converters that upload to remote servers, Quick Convert Pros processes everything locally. No data collection, no tracking, no cookies.",
+    description: "Your files never leave your device. Unlike other converters that upload to remote servers, Clowd Converter processes everything locally. No data collection, no tracking, no cookies.",
   },
   {
     icon: Heart,
@@ -37,7 +37,7 @@ const FeaturesSection = () => {
   return (
     <section className="w-full max-w-5xl mx-auto px-4 py-12">
       <h2 className="text-2xl font-bold text-foreground text-center mb-2">
-        Why Choose Quick Convert Pros?
+        Why Choose Clowd Converter?
       </h2>
       <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
         The fastest, most private file converter on the web. No uploads, no servers, no compromise.

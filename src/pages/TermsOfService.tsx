@@ -5,9 +5,9 @@ import Footer from "@/components/Footer";
 const TermsOfService = () => (
   <>
     <Helmet>
-      <title>Terms of Service — Quick Convert Pros</title>
-      <meta name="description" content="Terms of Service for Quick Convert Pros. Read the terms and conditions for using our free online file converter." />
-      <link rel="canonical" href="https://quickconvertpros.com/terms-of-service" />
+      <title>Terms of Service — Clowd Converter</title>
+      <meta name="description" content="Terms of Service for Clowd Converter. Read the terms and conditions for using our free online file converter." />
+      <link rel="canonical" href="https://clowdconverter.com/terms-of-service" />
     </Helmet>
     <Header />
     <main className="max-w-3xl mx-auto px-4 py-12 min-h-screen">
@@ -17,12 +17,12 @@ const TermsOfService = () => (
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-6 text-foreground/90">
         <section>
           <h2 className="text-xl font-semibold text-foreground">1. Acceptance of Terms</h2>
-          <p>By accessing and using Quick Convert Pros ("the Service"), you accept and agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.</p>
+          <p>By accessing and using Clowd Converter ("the Service"), you accept and agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.</p>
         </section>
 
         <section>
           <h2 className="text-xl font-semibold text-foreground">2. Description of Service</h2>
-          <p>Quick Convert Pros is a free, browser-based file conversion tool that allows you to convert video, audio, and image files. All conversions are processed locally in your browser — no files are uploaded to our servers.</p>
+          <p>Clowd Converter is a free, browser-based file conversion tool that allows you to convert video, audio, and image files. All conversions are processed locally in your browser — no files are uploaded to our servers.</p>
         </section>
 
         <section>
@@ -38,7 +38,7 @@ const TermsOfService = () => (
 
         <section>
           <h2 className="text-xl font-semibold text-foreground">4. Intellectual Property</h2>
-          <p>You retain all rights to the files you convert. Quick Convert Pros does not claim any ownership over your files. The Service itself, including its design, code, and content, is owned by Quick Convert Pros.</p>
+          <p>You retain all rights to the files you convert. Clowd Converter does not claim any ownership over your files. The Service itself, including its design, code, and content, is owned by Clowd Converter.</p>
         </section>
 
         <section>
@@ -48,7 +48,7 @@ const TermsOfService = () => (
 
         <section>
           <h2 className="text-xl font-semibold text-foreground">6. Limitation of Liability</h2>
-          <p>To the fullest extent permitted by law, Quick Convert Pros shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service.</p>
+          <p>To the fullest extent permitted by law, Clowd Converter shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service.</p>
         </section>
 
         <section>
@@ -63,7 +63,7 @@ const TermsOfService = () => (
 
         <section>
           <h2 className="text-xl font-semibold text-foreground">9. Contact</h2>
-          <p>For questions about these Terms, contact us at <a href="mailto:support@quickconvertpros.com" className="text-primary hover:underline">support@quickconvertpros.com</a>.</p>
+          <p>For questions about these Terms, contact us at <a href="mailto:support@clowdconverter.com" className="text-primary hover:underline">support@clowdconverter.com</a>.</p>
         </section>
       </div>
     </main>
