@@ -186,13 +186,15 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       {downloadUrl && !loading && (
         <div className="text-center space-y-2 animate-fade-in">
           <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
-          <button
-            onClick={() => triggerDownload(downloadUrl, downloadFilename)}
+          <a
+            href={downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg"
           >
             <Download className="w-6 h-6" />
             Download Now
-          </button>
+          </a>
           <p className="text-xs text-muted-foreground">{downloadFilename}</p>
         </div>
       )}
