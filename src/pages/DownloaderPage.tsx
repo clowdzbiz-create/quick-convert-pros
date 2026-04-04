@@ -83,8 +83,8 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         }),
       });
 
-      if (!res.ok) throw new Error(`API returned ${res.status}`);
       const data = await res.json();
+      console.log('API Response:', data);
 
       if (data.status === "error") {
         setError(data.text || "The API couldn't process this link.");
