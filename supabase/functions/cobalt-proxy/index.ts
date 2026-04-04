@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const COBALT_API = "https://sulphurously-exequial-taunya.ngrok-free.dev";
+const COBALT_API = "https://sulphurously-exequial-taunya.ngrok-free.dev/api/json";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
