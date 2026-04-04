@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSlot from "@/components/AdSlot";
 import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data";
-import { Download, ExternalLink, ArrowRight, CheckCircle2, Link2, Video, Music } from "lucide-react";
+import { Download, ArrowRight, CheckCircle2, Link2, Video, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -45,6 +45,8 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
   const [loading, setLoading] = useState(false);
   const [downloadMode, setDownloadMode] = useState<"video" | "audio">("video");
   const [quality, setQuality] = useState("720");
+  const [downloadHref, setDownloadHref] = useState("");
+  const [downloadFilename, setDownloadFilename] = useState("");
 
   const handleDownload = async () => {
     const trimmed = url.trim();
@@ -54,11 +56,16 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       setError(`That doesn't look like a valid ${platform.platform} URL`);
       return;
     }
+
+    if (downloadHref) {
+      URL.revokeObjectURL(downloadHref);
+      setDownloadHref("");
+    }
+
     setError("");
     setLoading(true);
 
     try {
-      // Step 1: Ask cobalt for the download info
       const res = await fetch(COBALT_API, {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
@@ -86,22 +93,23 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         return;
       }
 
-      // Step 2: If it's a tunnel/redirect URL on the cobalt server, proxy it
-      // Otherwise open directly
-      if (data.status === "tunnel" || fileUrl.includes("ngrok")) {
-        const proxyUrl = `${COBALT_API}?tunnel=${encodeURIComponent(fileUrl)}`;
-        // Use an anchor tag to let the browser handle the download natively
-        const a = document.createElement("a");
-        a.href = proxyUrl;
-        a.download = filename;
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } else {
-        // Direct URL (e.g. redirect status) — open in new tab
-        window.open(fileUrl, "_blank");
+      const finalUrl = (data.status === "tunnel" || String(fileUrl).includes("ngrok"))
+        ? `${COBALT_API}?tunnel=${encodeURIComponent(fileUrl)}`
+        : fileUrl;
+
+      const fileResponse = await fetch(finalUrl);
+      if (!fileResponse.ok) {
+        throw new Error(`File download returned ${fileResponse.status}`);
       }
+
+      const blob = await fileResponse.blob();
+      if (!blob.size) {
+        throw new Error("Downloaded file was empty");
+      }
+
+      const objectUrl = URL.createObjectURL(blob);
+      setDownloadHref(objectUrl);
+      setDownloadFilename(filename);
     } catch (e: any) {
       setError(e.message?.includes("fetch") || e.message?.includes("network")
         ? "Download API is currently offline. Please try again later."
@@ -113,9 +121,9 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
 
   return (
     <div className="max-w-lg mx-auto w-full space-y-4">
-      {/* Format toggle */}
       <div className="flex justify-center gap-2">
         <button
+          type="button"
           onClick={() => setDownloadMode("video")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             downloadMode === "video"
@@ -126,6 +134,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           <Video className="w-4 h-4" /> Video
         </button>
         <button
+          type="button"
           onClick={() => setDownloadMode("audio")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             downloadMode === "audio"
@@ -137,12 +146,12 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         </button>
       </div>
 
-      {/* Quality selector for video */}
       {downloadMode === "video" && (
         <div className="flex justify-center gap-2">
           {["360", "720", "1080"].map((q) => (
             <button
               key={q}
+              type="button"
               onClick={() => setQuality(q)}
               className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 quality === q
@@ -180,9 +189,22 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           )}
         </Button>
       </div>
+
+      {downloadHref && !loading && (
+        <div className="text-center animate-fade-in">
+          <a
+            href={downloadHref}
+            download={downloadFilename}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors"
+          >
+            <Download className="w-5 h-5" /> Download Now
+          </a>
+        </div>
+      )}
+
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
 
-      {!loading && (
+      {!loading && !downloadHref && (
         <p className="text-xs text-muted-foreground text-center">
           Paste your {platform.platform} link and hit Download — fast, free & private
         </p>
