@@ -58,12 +58,10 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
     setLoading(true);
 
     try {
+      // Step 1: Ask cobalt for the download info
       const res = await fetch(COBALT_API, {
         method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           url: trimmed,
           videoQuality: quality,
@@ -72,32 +70,37 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         }),
       });
 
-      const contentType = res.headers.get("Content-Type") || "";
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
+      const data = await res.json();
 
-      // If the response is a file stream (proxied tunnel/redirect)
-      if (!contentType.includes("application/json")) {
-        const blob = await res.blob();
-        const disposition = res.headers.get("Content-Disposition") || "";
-        const filenameMatch = disposition.match(/filename="?([^"]+)"?/);
-        const filename = filenameMatch?.[1] || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
+      if (data.status === "error") {
+        setError(data.text || "The API couldn't process this link.");
+        return;
+      }
 
+      const fileUrl = data.url;
+      const filename = data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
+
+      if (!fileUrl) {
+        setError("Unexpected response from the download API.");
+        return;
+      }
+
+      // Step 2: If it's a tunnel/redirect URL on the cobalt server, proxy it
+      // Otherwise open directly
+      if (data.status === "tunnel" || fileUrl.includes("ngrok")) {
+        const proxyUrl = `${COBALT_API}?tunnel=${encodeURIComponent(fileUrl)}`;
+        // Use an anchor tag to let the browser handle the download natively
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
+        a.href = proxyUrl;
         a.download = filename;
+        a.style.display = "none";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
       } else {
-        const data = await res.json();
-        if (data.status === "error") {
-          setError(data.text || "The API couldn't process this link.");
-        } else if (data.url) {
-          // Fallback: open direct URL
-          window.open(data.url, "_blank");
-        } else {
-          setError("Unexpected response from the download API.");
-        }
+        // Direct URL (e.g. redirect status) — open in new tab
+        window.open(fileUrl, "_blank");
       }
     } catch (e: any) {
       setError(e.message?.includes("fetch") || e.message?.includes("network")
