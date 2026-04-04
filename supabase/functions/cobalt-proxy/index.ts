@@ -132,13 +132,13 @@ serve(async (req) => {
     const data = await resp.json();
 
     if (typeof data?.url === "string") {
-      data.url = buildProxyUrl(req, data.url);
+      data.url = buildProxyUrl(data.url);
     }
 
     if (Array.isArray(data?.picker)) {
       data.picker = data.picker.map((item: Record<string, unknown>) =>
         typeof item.url === "string"
-          ? { ...item, url: buildProxyUrl(req, item.url) }
+          ? { ...item, url: buildProxyUrl(item.url) }
           : item,
       );
     }
