@@ -37,12 +37,15 @@ const URL_PATTERNS: Record<string, RegExp> = {
   tiktok: /^https?:\/\/(www\.|vm\.)?tiktok\.com\//i,
 };
 
+const COBALT_API = "https://sulphurously-exequial-taunya.ngrok-free.dev";
+
 const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState("");
 
-  const handleCopyAndGo = () => {
+  const handleDownload = async () => {
     const trimmed = url.trim();
     if (!trimmed) { setError("Please paste a URL first"); return; }
     const pattern = URL_PATTERNS[platform.icon];
@@ -51,10 +54,40 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       return;
     }
     setError("");
-    navigator.clipboard.writeText(trimmed).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 4000);
-    });
+    setDownloadUrl("");
+    setLoading(true);
+
+    try {
+      const res = await fetch(COBALT_API, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: trimmed,
+          videoQuality: "720",
+          filenameStyle: "classic",
+        }),
+      });
+
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
+      const data = await res.json();
+
+      if (data.status === "error") {
+        setError(data.text || "The API couldn't process this link.");
+      } else if (data.url) {
+        setDownloadUrl(data.url);
+      } else {
+        setError("Unexpected response from the download API.");
+      }
+    } catch (e: any) {
+      setError(e.message?.includes("fetch") || e.message?.includes("network")
+        ? "Download API is currently offline. Please try again later."
+        : `Download failed: ${e.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,37 +107,44 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             type="url"
             placeholder={`Paste ${platform.platform} URL here...`}
             value={url}
-            onChange={(e) => { setUrl(e.target.value); setError(""); setCopied(false); }}
+            onChange={(e) => { setUrl(e.target.value); setError(""); setDownloadUrl(""); }}
             className="h-12 pl-10 text-base"
           />
         </div>
-        <Button onClick={handleCopyAndGo} size="lg" className="h-12 px-5 font-bold gap-2 rounded-xl shrink-0">
-          {copied ? <CheckCircle2 className="w-5 h-5" /> : <Download className="w-5 h-5" />}
-          {copied ? "Copied!" : "Copy URL"}
+        <Button
+          onClick={handleDownload}
+          size="lg"
+          className="h-12 px-5 font-bold gap-2 rounded-xl shrink-0"
+          disabled={loading}
+        >
+          {loading ? (
+            <><svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" /><path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="opacity-75" /></svg> Processing...</>
+          ) : (
+            <><Download className="w-5 h-5" /> Download</>
+          )}
         </Button>
       </div>
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
 
-      {copied && (
+      {downloadUrl && (
         <div className="text-center space-y-2 animate-fade-in">
-          <p className="text-sm text-foreground font-medium">✅ URL copied! Now open the downloader in a new tab:</p>
+          <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
           <a
-            href="https://cobalt.tools"
+            href={downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors"
           >
             <Download className="w-5 h-5" />
-            Open cobalt.tools
+            Download Now
             <ExternalLink className="w-4 h-4 opacity-60" />
           </a>
-          <p className="text-xs text-muted-foreground">Paste your copied URL there and start the download</p>
         </div>
       )}
 
-      {!copied && (
+      {!downloadUrl && !loading && (
         <p className="text-xs text-muted-foreground text-center">
-          Paste your {platform.platform} link, copy it, then download via cobalt.tools — free & open-source
+          Paste your {platform.platform} link and hit Download — fast, free & private
         </p>
       )}
     </div>
