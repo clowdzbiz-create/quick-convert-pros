@@ -224,6 +224,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
   );
 };
 
+const DownloaderPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const platform = slug ? getDownloaderBySlug(slug) : undefined;
 
