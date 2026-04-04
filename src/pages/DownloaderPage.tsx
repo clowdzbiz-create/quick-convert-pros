@@ -54,6 +54,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
   const [downloadUrl, setDownloadUrl] = useState("");
   const [downloadFilename, setDownloadFilename] = useState("");
   const [pickerItems, setPickerItems] = useState<PickerItem[]>([]);
+  const [hasTunnelLink, setHasTunnelLink] = useState(false);
   const downloadFrameName = `download-frame-${useId().replace(/:/g, "")}`;
 
   const resetResults = () => {
@@ -61,6 +62,12 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
     setDownloadUrl("");
     setDownloadFilename("");
     setPickerItems([]);
+    setHasTunnelLink(false);
+  };
+
+  const handleNativeDownload = () => {
+    if (!downloadUrl) return;
+    window.location.assign(downloadUrl);
   };
 
   const handleDownload = async () => {
@@ -106,20 +113,14 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         return;
       }
 
-      if (data.status === "tunnel" && typeof data.url === "string") {
+      if (data.status === "tunnel" && typeof data.url === "string" && data.url.length > 0) {
         const finalUrl = data.url;
         const fname = data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
         console.log("Final Download Link:", finalUrl);
         console.log("Filename:", fname);
         setDownloadUrl(finalUrl);
         setDownloadFilename(fname);
-        return;
-      }
-
-      if (typeof data.url === "string" && data.url.length > 0) {
-        console.log("Final Download Link:", data.url);
-        setDownloadUrl(data.url);
-        setDownloadFilename(data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4"));
+        setHasTunnelLink(true);
         return;
       }
 
@@ -217,19 +218,17 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
 
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
 
-      {downloadUrl && !loading && (
+      {hasTunnelLink && downloadUrl && !loading && (
         <div className="text-center space-y-2 animate-fade-in">
           <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
-          <a
-            href={downloadUrl}
-            download={downloadFilename}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={handleNativeDownload}
             className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg"
           >
             <Download className="w-6 h-6" />
             Download Now
-          </a>
+          </button>
           <p className="text-xs text-muted-foreground">{downloadFilename}</p>
         </div>
       )}
