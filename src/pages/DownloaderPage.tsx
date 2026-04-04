@@ -46,87 +46,36 @@ interface PickerItem {
 }
 
 const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
-  const [url, setUrl] = useState("");
-  const [error, setError] = useState("");
+  const [inputUrl, setInputUrl] = useState("");
+  const [link, setLink] = useState("");
   const [loading, setLoading] = useState(false);
-  const [downloadMode, setDownloadMode] = useState<"video" | "audio">("video");
-  const [quality, setQuality] = useState("720");
-  const [downloadUrl, setDownloadUrl] = useState("");
-  const [downloadFilename, setDownloadFilename] = useState("");
-  const [pickerItems, setPickerItems] = useState<PickerItem[]>([]);
-  const [hasTunnelLink, setHasTunnelLink] = useState(false);
-  const downloadFrameName = `download-frame-${useId().replace(/:/g, "")}`;
+  const [error, setError] = useState("");
 
-  const resetResults = () => {
-    setError("");
-    setDownloadUrl("");
-    setDownloadFilename("");
-    setPickerItems([]);
-    setHasTunnelLink(false);
-  };
-
-  const handleNativeDownload = () => {
-    if (!downloadUrl) return;
-    window.location.assign(downloadUrl);
-  };
-
-  const handleDownload = async () => {
-    const trimmed = url.trim();
+  const startDownload = async () => {
+    const trimmed = inputUrl.trim();
     if (!trimmed) {
       setError("Please paste a URL first");
       return;
     }
-
-    const pattern = URL_PATTERNS[platform.icon];
-    if (pattern && !pattern.test(trimmed)) {
-      setError(`That doesn't look like a valid ${platform.platform} URL`);
-      return;
-    }
-
-    resetResults();
     setLoading(true);
-
+    setLink("");
+    setError("");
     try {
-      const res = await fetch(COBALT_API, {
+      const res = await fetch("https://sulphurously-exequial-taunya.ngrok-free.dev/", {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: trimmed,
-          videoQuality: quality,
-          filenameStyle: "classic",
-          downloadMode: "default",
-          audioFormat: "mp3",
-          isAudioOnly: downloadMode === "audio",
-        }),
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ url: trimmed, videoQuality: "720" }),
       });
-
       const data = await res.json();
       console.log("API Response:", data);
-
-      if (data.status === "error") {
-        setError(data.text || "The API couldn't process this link.");
-        return;
+      if (data.url) {
+        console.log("Final Download Link:", data.url);
+        setLink(data.url);
+      } else {
+        setError(data.text || "No download link returned.");
       }
-
-      if (data.status === "picker" && Array.isArray(data.picker)) {
-        setPickerItems(data.picker);
-        return;
-      }
-
-      if (data.status === "tunnel" && typeof data.url === "string" && data.url.length > 0) {
-        const finalUrl = data.url;
-        const fname = data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
-        console.log("Final Download Link:", finalUrl);
-        console.log("Filename:", fname);
-        setDownloadUrl(finalUrl);
-        setDownloadFilename(fname);
-        setHasTunnelLink(true);
-        return;
-      }
-
-      setError("Unexpected response from the download API.");
     } catch {
-      setError("Unable to connect to the download server. Please ensure the local Cobalt service is running.");
+      setError("Unable to connect to the download server.");
     } finally {
       setLoading(false);
     }
@@ -134,128 +83,32 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
 
   return (
     <div className="max-w-lg mx-auto w-full space-y-4">
-      <iframe title="Download frame" name={downloadFrameName} className="hidden" />
-
-      <div className="flex justify-center gap-2">
-        <button
-          type="button"
-          onClick={() => setDownloadMode("video")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            downloadMode === "video"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Video className="w-4 h-4" /> Video
-        </button>
-        <button
-          type="button"
-          onClick={() => setDownloadMode("audio")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            downloadMode === "audio"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Music className="w-4 h-4" /> Audio (MP3)
-        </button>
-      </div>
-
-      {downloadMode === "video" && (
-        <div className="flex justify-center gap-2">
-          {["360", "720", "1080"].map((q) => (
-            <button
-              key={q}
-              type="button"
-              onClick={() => setQuality(q)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                quality === q
-                  ? "bg-primary/20 text-primary border border-primary/40"
-                  : "bg-muted text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {q}p
-            </button>
-          ))}
-        </div>
-      )}
-
       <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            type="url"
-            placeholder={`Paste ${platform.platform} URL here...`}
-            value={url}
-            onChange={(e) => {
-              setUrl(e.target.value);
-              resetResults();
-            }}
-            className="h-12 pl-10 text-base"
-          />
-        </div>
-        <Button
-          onClick={handleDownload}
-          size="lg"
-          className="h-12 px-5 font-bold gap-2 rounded-xl shrink-0"
+        <Input
+          type="url"
+          placeholder={`Paste ${platform.platform} URL here...`}
+          value={inputUrl}
+          onChange={(e) => { setInputUrl(e.target.value); setLink(""); setError(""); }}
+          className="h-12 text-base"
+        />
+        <button
+          onClick={startDownload}
           disabled={loading}
+          className="h-12 px-5 font-bold rounded-xl shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
         >
-          {loading ? (
-            <>
-              <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
-                <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="opacity-75" />
-              </svg>
-              Processing...
-            </>
-          ) : (
-            <>
-              <Download className="w-5 h-5" /> Download
-            </>
-          )}
-        </Button>
+          {loading ? "Processing..." : "Get Link"}
+        </button>
       </div>
-
       {error && <p className="text-destructive text-sm text-center">{error}</p>}
-
-      {hasTunnelLink && downloadUrl && !loading && (
-        <div className="text-center space-y-2 animate-fade-in">
-          <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
-          <button
-            type="button"
-            onClick={handleNativeDownload}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg"
-          >
-            <Download className="w-6 h-6" />
-            Download Now
-          </button>
-          <p className="text-xs text-muted-foreground">{downloadFilename}</p>
-        </div>
-      )}
-
-      {pickerItems.length > 0 && !loading && (
-        <div className="space-y-2 animate-fade-in">
-          <p className="text-sm text-foreground font-medium text-center">Multiple files found — pick one:</p>
-          <div className="grid gap-2">
-            {pickerItems.map((item, i) => (
-              <a
-                key={`${item.url}-${i}`}
-                href={item.url}
-                target={downloadFrameName}
-                className="flex items-center gap-3 w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-left"
-              >
-                <Download className="w-5 h-5 shrink-0" />
-                {item.type === "photo" ? `Photo ${i + 1}` : `File ${i + 1}`}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {!loading && !downloadUrl && pickerItems.length === 0 && (
-        <p className="text-xs text-muted-foreground text-center">
-          Paste your {platform.platform} link and hit Download — fast, free & private
-        </p>
+      {link && (
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: "block", padding: "20px", background: "green", color: "white", textAlign: "center", marginTop: "10px", borderRadius: "12px", fontWeight: "bold", fontSize: "18px" }}
+        >
+          CLICK HERE TO DOWNLOAD VIDEO
+        </a>
       )}
     </div>
   );
