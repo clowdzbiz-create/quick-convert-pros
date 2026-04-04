@@ -61,7 +61,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
     setLink("");
     setError("");
     try {
-      const res = await fetch("https://sulphurously-exequial-taunya.ngrok-free.dev/", {
+      const res = await fetch(COBALT_API, {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({ url: trimmed, videoQuality: "720" }),
