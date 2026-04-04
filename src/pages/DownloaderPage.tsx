@@ -7,7 +7,7 @@ import { getDownloaderBySlug, DOWNLOADER_PLATFORMS } from "@/lib/downloader-data
 import { Download, ArrowRight, CheckCircle2, Link2, Video, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 const PlatformIcon = ({ icon, className, style }: { icon: string; className?: string; style?: React.CSSProperties }) => {
   if (icon === "youtube") {
@@ -54,25 +54,35 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
   const [downloadUrl, setDownloadUrl] = useState("");
   const [downloadFilename, setDownloadFilename] = useState("");
   const [pickerItems, setPickerItems] = useState<PickerItem[]>([]);
+  const downloadFrameName = `download-frame-${useId().replace(/:/g, "")}`;
+
+  const resetResults = () => {
+    setError("");
+    setDownloadUrl("");
+    setDownloadFilename("");
+    setPickerItems([]);
+  };
 
   const handleDownload = async () => {
     const trimmed = url.trim();
-    if (!trimmed) { setError("Please paste a URL first"); return; }
+    if (!trimmed) {
+      setError("Please paste a URL first");
+      return;
+    }
+
     const pattern = URL_PATTERNS[platform.icon];
     if (pattern && !pattern.test(trimmed)) {
       setError(`That doesn't look like a valid ${platform.platform} URL`);
       return;
     }
 
-    setError("");
-    setDownloadUrl("");
-    setPickerItems([]);
+    resetResults();
     setLoading(true);
 
     try {
       const res = await fetch(COBALT_API, {
         method: "POST",
-        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           url: trimmed,
           videoQuality: quality,
@@ -84,7 +94,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       });
 
       const data = await res.json();
-      console.log('API Response:', data);
+      console.log("API Response:", data);
 
       if (data.status === "error") {
         setError(data.text || "The API couldn't process this link.");
@@ -93,12 +103,16 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
 
       if (data.status === "picker" && Array.isArray(data.picker)) {
         setPickerItems(data.picker);
-      } else if (data.url) {
+        return;
+      }
+
+      if (typeof data.url === "string" && data.url.length > 0) {
         setDownloadUrl(data.url);
         setDownloadFilename(data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4"));
-      } else {
-        setError("Unexpected response from the download API.");
+        return;
       }
+
+      setError("Unexpected response from the download API.");
     } catch {
       setError("Unable to connect to the download server. Please ensure the local Cobalt service is running.");
     } finally {
@@ -106,12 +120,10 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
     }
   };
 
-  const triggerDownload = (href: string, filename?: string) => {
-    window.open(href, "_blank");
-  };
-
   return (
     <div className="max-w-lg mx-auto w-full space-y-4">
+      <iframe title="Download frame" name={downloadFrameName} className="hidden" />
+
       <div className="flex justify-center gap-2">
         <button
           type="button"
@@ -163,7 +175,10 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             type="url"
             placeholder={`Paste ${platform.platform} URL here...`}
             value={url}
-            onChange={(e) => { setUrl(e.target.value); setError(""); setDownloadUrl(""); setPickerItems([]); }}
+            onChange={(e) => {
+              setUrl(e.target.value);
+              resetResults();
+            }}
             className="h-12 pl-10 text-base"
           />
         </div>
@@ -174,9 +189,17 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           disabled={loading}
         >
           {loading ? (
-            <><svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" /><path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="opacity-75" /></svg> Processing...</>
+            <>
+              <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+                <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="opacity-75" />
+              </svg>
+              Processing...
+            </>
           ) : (
-            <><Download className="w-5 h-5" /> Download</>
+            <>
+              <Download className="w-5 h-5" /> Download
+            </>
           )}
         </Button>
       </div>
@@ -188,8 +211,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
           <a
             href={downloadUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={downloadFrameName}
             className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg"
           >
             <Download className="w-6 h-6" />
@@ -204,14 +226,15 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           <p className="text-sm text-foreground font-medium text-center">Multiple files found — pick one:</p>
           <div className="grid gap-2">
             {pickerItems.map((item, i) => (
-              <button
-                key={i}
-                onClick={() => triggerDownload(item.url)}
+              <a
+                key={`${item.url}-${i}`}
+                href={item.url}
+                target={downloadFrameName}
                 className="flex items-center gap-3 w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-left"
               >
                 <Download className="w-5 h-5 shrink-0" />
                 {item.type === "photo" ? `Photo ${i + 1}` : `File ${i + 1}`}
-              </button>
+              </a>
             ))}
           </div>
         </div>
