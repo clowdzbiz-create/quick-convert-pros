@@ -39,14 +39,21 @@ const URL_PATTERNS: Record<string, RegExp> = {
 
 const COBALT_API = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cobalt-proxy`;
 
+interface PickerItem {
+  url: string;
+  type?: string;
+  thumb?: string;
+}
+
 const DownloadInput = ({ platform }: { platform: { icon: string; platform: string; formats: string[] } }) => {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [downloadMode, setDownloadMode] = useState<"video" | "audio">("video");
   const [quality, setQuality] = useState("720");
-  const [downloadHref, setDownloadHref] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
   const [downloadFilename, setDownloadFilename] = useState("");
+  const [pickerItems, setPickerItems] = useState<PickerItem[]>([]);
 
   const handleDownload = async () => {
     const trimmed = url.trim();
@@ -57,12 +64,9 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
       return;
     }
 
-    if (downloadHref) {
-      URL.revokeObjectURL(downloadHref);
-      setDownloadHref("");
-    }
-
     setError("");
+    setDownloadUrl("");
+    setPickerItems([]);
     setLoading(true);
 
     try {
@@ -73,7 +77,9 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
           url: trimmed,
           videoQuality: quality,
           filenameStyle: "classic",
-          downloadMode,
+          downloadMode: "default",
+          audioFormat: "mp3",
+          isAudioOnly: downloadMode === "audio",
         }),
       });
 
@@ -85,38 +91,23 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         return;
       }
 
-      const fileUrl = data.url;
-      const filename = data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4");
-
-      if (!fileUrl) {
+      if (data.status === "stream" || data.status === "redirect" || data.status === "tunnel") {
+        setDownloadUrl(data.url);
+        setDownloadFilename(data.filename || (downloadMode === "audio" ? "download.mp3" : "download.mp4"));
+      } else if (data.status === "picker" && Array.isArray(data.picker)) {
+        setPickerItems(data.picker);
+      } else {
         setError("Unexpected response from the download API.");
-        return;
       }
-
-      const finalUrl = (data.status === "tunnel" || String(fileUrl).includes("ngrok"))
-        ? `${COBALT_API}?tunnel=${encodeURIComponent(fileUrl)}`
-        : fileUrl;
-
-      const fileResponse = await fetch(finalUrl);
-      if (!fileResponse.ok) {
-        throw new Error(`File download returned ${fileResponse.status}`);
-      }
-
-      const blob = await fileResponse.blob();
-      if (!blob.size) {
-        throw new Error("Downloaded file was empty");
-      }
-
-      const objectUrl = URL.createObjectURL(blob);
-      setDownloadHref(objectUrl);
-      setDownloadFilename(filename);
-    } catch (e: any) {
-      setError(e.message?.includes("fetch") || e.message?.includes("network")
-        ? "Download API is currently offline. Please try again later."
-        : `Download failed: ${e.message}`);
+    } catch {
+      setError("Unable to connect to the download server. Please ensure the local Cobalt service is running.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const triggerDownload = (href: string, filename?: string) => {
+    window.open(href, "_blank");
   };
 
   return (
@@ -172,7 +163,7 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
             type="url"
             placeholder={`Paste ${platform.platform} URL here...`}
             value={url}
-            onChange={(e) => { setUrl(e.target.value); setError(""); }}
+            onChange={(e) => { setUrl(e.target.value); setError(""); setDownloadUrl(""); setPickerItems([]); }}
             className="h-12 pl-10 text-base"
           />
         </div>
@@ -190,21 +181,41 @@ const DownloadInput = ({ platform }: { platform: { icon: string; platform: strin
         </Button>
       </div>
 
-      {downloadHref && !loading && (
-        <div className="text-center animate-fade-in">
-          <a
-            href={downloadHref}
-            download={downloadFilename}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors"
+      {error && <p className="text-destructive text-sm text-center">{error}</p>}
+
+      {downloadUrl && !loading && (
+        <div className="text-center space-y-2 animate-fade-in">
+          <p className="text-sm text-foreground font-medium">✅ Ready! Click below to save your file:</p>
+          <button
+            onClick={() => triggerDownload(downloadUrl, downloadFilename)}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg"
           >
-            <Download className="w-5 h-5" /> Download Now
-          </a>
+            <Download className="w-6 h-6" />
+            Download Now
+          </button>
+          <p className="text-xs text-muted-foreground">{downloadFilename}</p>
         </div>
       )}
 
-      {error && <p className="text-destructive text-sm text-center">{error}</p>}
+      {pickerItems.length > 0 && !loading && (
+        <div className="space-y-2 animate-fade-in">
+          <p className="text-sm text-foreground font-medium text-center">Multiple files found — pick one:</p>
+          <div className="grid gap-2">
+            {pickerItems.map((item, i) => (
+              <button
+                key={i}
+                onClick={() => triggerDownload(item.url)}
+                className="flex items-center gap-3 w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-left"
+              >
+                <Download className="w-5 h-5 shrink-0" />
+                {item.type === "photo" ? `Photo ${i + 1}` : `File ${i + 1}`}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {!loading && !downloadHref && (
+      {!loading && !downloadUrl && pickerItems.length === 0 && (
         <p className="text-xs text-muted-foreground text-center">
           Paste your {platform.platform} link and hit Download — fast, free & private
         </p>
