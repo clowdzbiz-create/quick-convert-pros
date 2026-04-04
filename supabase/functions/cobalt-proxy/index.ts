@@ -13,13 +13,25 @@ serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
+    const input = await req.json();
 
-    if (!body.url) {
+    if (!input.url) {
       return new Response(JSON.stringify({ status: "error", text: "Missing url" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Build a clean body with only Cobalt-supported fields
+    const cobaltBody: Record<string, unknown> = {
+      url: input.url,
+      videoQuality: input.videoQuality || "720",
+      filenameStyle: input.filenameStyle || "classic",
+    };
+
+    if (input.isAudioOnly) {
+      cobaltBody.isAudioOnly = true;
+      cobaltBody.audioFormat = input.audioFormat || "mp3";
     }
 
     const resp = await fetch(COBALT_API, {
@@ -28,7 +40,7 @@ serve(async (req) => {
         "Accept": "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(cobaltBody),
     });
 
     const contentType = resp.headers.get("Content-Type") || "";
