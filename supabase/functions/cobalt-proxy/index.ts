@@ -69,6 +69,18 @@ serve(async (req) => {
       body: JSON.stringify(body),
     });
 
+    const responseContentType = resp.headers.get("Content-Type") || "";
+    if (!responseContentType.includes("application/json")) {
+      const text = await resp.text();
+      return new Response(JSON.stringify({
+        status: "error",
+        text: text.slice(0, 180) || "Cobalt API returned an unexpected response.",
+      }), {
+        status: 502,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const data = await resp.json();
 
     return new Response(JSON.stringify(data), {
