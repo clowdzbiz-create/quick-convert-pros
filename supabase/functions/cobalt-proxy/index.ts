@@ -69,9 +69,7 @@ serve(async (req) => {
       const contentType = upstream.headers.get("Content-Type");
       const contentDisposition = upstream.headers.get("Content-Disposition");
 
-      if (contentType) {
-        headers.set("Content-Type", contentType);
-      }
+      headers.set("Content-Type", contentType || "application/octet-stream");
 
       if (contentDisposition) {
         headers.set("Content-Disposition", contentDisposition);
