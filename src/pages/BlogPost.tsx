@@ -32,19 +32,19 @@ const BlogPost = () => {
     description: post.metaDescription,
     datePublished: post.date,
     image: post.coverImage,
-    author: { "@type": "Organization", name: "Quick Convert Pros" },
-    publisher: { "@type": "Organization", name: "Quick Convert Pros", logo: { "@type": "ImageObject", url: "https://quickconvertpros.com/favicon.png" } },
-    url: `https://quickconvertpros.com/blog/${post.slug}`,
-    mainEntityOfPage: { "@type": "WebPage", "@id": `https://quickconvertpros.com/blog/${post.slug}` },
+    author: { "@type": "Organization", name: "Clowd Converter" },
+    publisher: { "@type": "Organization", name: "Clowd Converter", logo: { "@type": "ImageObject", url: "https://clowdconverter.com/favicon.png" } },
+    url: `https://clowdconverter.com/blog/${post.slug}`,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://clowdconverter.com/blog/${post.slug}` },
   };
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Quick Convert Pros", item: "https://quickconvertpros.com" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://quickconvertpros.com/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://quickconvertpros.com/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "Clowd Converter", item: "https://clowdconverter.com" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://clowdconverter.com/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://clowdconverter.com/blog/${post.slug}` },
     ],
   };
 
@@ -53,7 +53,7 @@ const BlogPost = () => {
       <Helmet>
         <title>{post.title}</title>
         <meta name="description" content={post.metaDescription} />
-        <link rel="canonical" href={`https://quickconvertpros.com/blog/${post.slug}`} />
+        <link rel="canonical" href={`https://clowdconverter.com/blog/${post.slug}`} />
         <meta property="og:image" content={post.coverImage} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
@@ -129,7 +129,7 @@ const BlogPost = () => {
           <div className="mt-8 p-6 bg-primary/5 rounded-xl border border-primary/10">
             <h3 className="font-bold text-foreground mb-2">Ready to convert your files?</h3>
             <p className="text-sm text-muted-foreground mb-3">
-              Try Quick Convert Pros — it's free, fast, and works right in your browser. No uploads, no sign-up required.
+              Try Clowd Converter — it's free, fast, and works right in your browser. No uploads, no sign-up required.
             </p>
             <Link
               to="/"

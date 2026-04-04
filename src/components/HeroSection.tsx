@@ -13,7 +13,7 @@ const HeroSection = () => {
         Convert videos, audio, and images instantly — right in your browser. No uploads, no sign-up, 100% free.
       </p>
       <p className="text-muted-foreground text-sm max-w-md mx-auto">
-        Supports MP4, MP3, WAV, PNG, JPG, WebP, GIF, and 15+ more formats. Powered by Quick Convert Pros.
+        Supports MP4, MP3, WAV, PNG, JPG, WebP, GIF, and 15+ more formats. Powered by Clowd Converter.
       </p>
     </section>
   );

@@ -19,7 +19,7 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
   {
     slug: "youtube-downloader",
     platform: "YouTube",
-    title: "YouTube Downloader — Download YouTube Videos as MP3 & MP4 Free | Quick Convert Pros",
+    title: "YouTube Downloader — Download YouTube Videos as MP3 & MP4 Free | Clowd Converter",
     metaDescription:
       "Download YouTube videos as MP4 or extract audio as MP3 for free. No software needed — works on any device. Fast, safe, and unlimited.",
     h1: "YouTube Video Downloader",
@@ -65,7 +65,7 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
       },
     ],
     seoContent: [
-      "Looking for a reliable YouTube video downloader? Quick Convert Pros makes it simple to save any YouTube video to your device as an MP4 video file or MP3 audio file. Whether you want to watch videos offline during a flight, save a lecture for studying, or keep a music video for your collection — we've got you covered.",
+      "Looking for a reliable YouTube video downloader? Clowd Converter makes it simple to save any YouTube video to your device as an MP4 video file or MP3 audio file. Whether you want to watch videos offline during a flight, save a lecture for studying, or keep a music video for your collection — we've got you covered.",
       "Unlike many YouTube downloaders filled with ads and malware, we partner with cobalt.tools — a trusted, open-source platform that respects your privacy. No shady redirects, no fake download buttons, no adware bundled with your files.",
       "Our YouTube downloader supports all video lengths and resolutions. Download short clips, full movies, music videos, tutorials, podcasts, and livestream recordings. Audio extraction produces high-quality MP3 files at up to 320kbps bitrate.",
     ],
@@ -73,7 +73,7 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
   {
     slug: "instagram-downloader",
     platform: "Instagram",
-    title: "Instagram Downloader — Save Reels, Stories & Posts Free | Quick Convert Pros",
+    title: "Instagram Downloader — Save Reels, Stories & Posts Free | Clowd Converter",
     metaDescription:
       "Download Instagram Reels, Stories, and posts as MP4 or photos. Free, fast, no login required. Save any Instagram content to your device.",
     h1: "Instagram Video & Photo Downloader",
@@ -119,7 +119,7 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
       },
     ],
     seoContent: [
-      "Need to save an Instagram Reel, Story, or post? Quick Convert Pros' Instagram downloader lets you download any public Instagram content directly to your device. Whether it's a viral Reel you want to share, a Story that's about to expire, or a stunning photo you want to keep — downloading takes just seconds.",
+      "Need to save an Instagram Reel, Story, or post? Clowd Converter' Instagram downloader lets you download any public Instagram content directly to your device. Whether it's a viral Reel you want to share, a Story that's about to expire, or a stunning photo you want to keep — downloading takes just seconds.",
       "Instagram doesn't offer a built-in download option for other people's content, but our tool bridges that gap. Simply grab the link, paste it in, and save. It works for Reels, Stories, single photos, carousel posts, and IGTV videos.",
       "We use cobalt.tools — an open-source, privacy-focused downloader with zero ads and no tracking. Unlike sketchy Instagram saver apps, there's nothing to install and no risk of malware.",
     ],
@@ -127,7 +127,7 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
   {
     slug: "tiktok-downloader",
     platform: "TikTok",
-    title: "TikTok Downloader — Save TikTok Videos Without Watermark Free | Quick Convert Pros",
+    title: "TikTok Downloader — Save TikTok Videos Without Watermark Free | Clowd Converter",
     metaDescription:
       "Download TikTok videos without watermark as MP4. Free, fast, no app needed. Save any TikTok to your device in full HD quality.",
     h1: "TikTok Video Downloader",
@@ -173,7 +173,7 @@ export const DOWNLOADER_PLATFORMS: DownloaderPlatform[] = [
       },
     ],
     seoContent: [
-      "Want to save TikTok videos without the annoying watermark? Quick Convert Pros' TikTok downloader removes the watermark and saves videos as clean MP4 files in full HD quality. Perfect for sharing on other platforms, editing in your video editor, or just keeping your favorite TikToks offline.",
+      "Want to save TikTok videos without the annoying watermark? Clowd Converter' TikTok downloader removes the watermark and saves videos as clean MP4 files in full HD quality. Perfect for sharing on other platforms, editing in your video editor, or just keeping your favorite TikToks offline.",
       "TikTok's built-in save feature adds a watermark and sometimes reduces quality. Our tool bypasses that entirely, delivering the original quality video without any branding overlays. You can also extract just the audio as an MP3 — ideal for saving trending sounds.",
       "Powered by cobalt.tools, an open-source download engine trusted by millions. No ads, no popups, no malware. Just paste the link and download. Works on every device without installing anything.",
     ],
